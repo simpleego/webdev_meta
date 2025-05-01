@@ -1,11 +1,24 @@
 # 프론트엔드(Front-end)란?
-프론트엔드(Front-end)란 웹사이트나 앱 등의 사용자 인터페이스(UI)를 개발하는 분야를 말합니다. 사용자가 실제로 보고 상호작용하는 부분을 담당하는데, HTML, CSS, JavaScript 등의 프로그래밍 언어를 사용하여 웹사이트나 앱의 디자인과 기능을 구현합니다.​
+프론트엔드(Front-end)란 웹사이트나 앱 등의 사용자 인터페이스(UI)를 개발하는 분야를 말합니다. 사용자가 실제로 보고 상호작용하는 부분을 담당하는데, HTML, CSS, JavaScript 등의 프로그래밍 언어를 사용하여 웹사이트나 앱의 디자인과 기능을 구현합니다.​  
 
-<img src="./img/frontend.png"  width="500px">
+![image](https://github.com/user-attachments/assets/b1679fdb-e33a-4cb0-9143-367da698ed91)
+
+***  
+
+
+![image](https://github.com/user-attachments/assets/7e98cb73-898f-4dd9-82e5-189344da4f6f)
+
 
 프론트엔드 개발자는 사용자 경험(UX)을 개선하기 위해 레이아웃, 색상, 글꼴 등의 디자인 요소를 조율하고, 사용자가 버튼을 클릭하거나 입력한 정보를 처리하는 등의 기능을 구현합니다. 또한, 웹사이트나 앱의 반응성(Responsiveness)을 향상시키기 위해 다양한 디바이스에서 동작하는 코드를 작성하는 등의 작업도 수행합니다.​
 
 프론트엔드  함께 작업을 수행할  백엔드 개발자는  
 백엔드 개발자는 데이터베이스, 서버, 애플리케이션 서버 등의 기술을 사용하여 웹사이트나 앱의 로직과 기능을 개발합니다. 사용자가 입력한 정보를 처리하고, 데이터를 저장하고, 인증 및 보안과 같은 중요한 기능을 담당합니다.​
 
+![image](https://github.com/user-attachments/assets/704595cf-7a64-4baf-b596-23adb0749234)
+
+
 또한, 백엔드 개발자는 API(Application Programming Interface)를 개발하여 프론트엔드와 데이터베이스 간의 통신을 관리합니다. 이를 통해 프론트엔드 개발자는 백엔드에서 제공하는 데이터를 활용하여 웹사이트나 앱의 기능을 개발할 수 있습니다.
+
+
+![image](https://github.com/user-attachments/assets/8659c97e-40b5-4a48-8490-739d744dad63)
+
