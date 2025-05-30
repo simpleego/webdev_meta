@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>변수 선언(준비)과 사용</title>
+</head>
+<body>
+    <h1>input 태그로 데이터 입력 및 데이터 가져오기</h1>
+    
+        원의 반지름 : <input type="text" id="num" size="5" autofocus value="5">
+        <button onclick="getArea()">면적계산</button>
+        <p>결과값 : <input type="text" id="result" size="5" disabled value="0"> </p>
+    
+    <script>
+        function getArea() {
+
+            // 변수 선언(준비)--데이터를 저장하기 위해서
+                const PI = 3.14;
+
+            // 데이터 입력
+            // let radius = window.prompt('반지름 입력');
+            // HTML input 태그로 숫자값을 입력받기
+            const radius = document.getElementById('num').value;
+
+            // 데이터 처리
+            let area = PI * radius * radius;
+
+            // 데이터 출력
+            // document.write('면적 : '+area);
+            //document.getElementById('result').innerHTML = area;
+            document.getElementById('result').value = area;
+        }
+
+    </script>
+</body>
+</html>

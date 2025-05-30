@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>총점 : <span id="tot"></span></p>
+    <p>평균 : <span id="avg"></span></p>
+    <script>
+        // 연산자 연습
+        // 총점, 평균 구하기
+        let tot, avg;
+        let kor = 89;
+        let eng = 78;
+        let mat = 45;
+
+        // 총점 처리
+        tot = kor + eng + mat;
+        avg = tot / 3;
+
+        // 총점, 평균 출력
+        document.getElementById("tot").innerText = tot;
+        document.getElementById("avg").innerHTML = 
+                '<strong style="color:red">'+avg+'<strong>';
+    </script>
+</body>
+
+</html>

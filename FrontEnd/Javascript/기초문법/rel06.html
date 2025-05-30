@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관계연산자(비교 연산자)</title>
+</head>
+
+<body>
+    <script>
+        // 성년이면 술과 담배를 제공한다.
+        // 미성년이며 집에 가라고 한다.
+
+        // 입력: 나이(age)
+        let age = prompt('나이 :');
+        let result;
+
+        // 처리 : 나이가 19이상이면 성년/미성년으로 출력
+        console.log('==>'+age);  // 빈 값 입력시 확인
+
+        if (age.length >= 1) {
+            if (age >= 19) {
+                result = '술과 담배를 제공한다.';
+            }
+
+            if (age < 19) {
+                result = '집에 가라...';
+            }
+        } else{
+            alert('나이를 입력하세요.')
+        }
+
+        // 출력 : 성년/미성년으로 출력
+        alert('결과 : ' + result);
+    </script>
+</body>
+
+</html>

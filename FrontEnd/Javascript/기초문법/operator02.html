@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    input {
+        text-align: right;
+        padding: 8px;
+    }
+</style>
+
+<body>
+    <p>커피 가격 :<span id="coffeePrice"></span></p>
+    <label for="">동전 : </label>
+    <input type="text" id="coin" value="0">원
+    <p> 잔돈 : <span id="returnMoney"></span></p>
+    <button onclick="coffeeMachine()">계산</button>
+
+    <script>
+        let coffee = 300;  // 커피 가격
+        document.getElementById("coffeePrice").innerHTML = coffee;
+
+        function coffeeMachine() {
+
+            let returnMoney; // 잔돈
+
+            //let coin = prompt('동전입력 : ');
+            let coin = document.getElementById("coin").value;
+
+            // 잔돈 계산
+            returnMoney = coin % coffee;
+
+            // 잔돈 출력
+            document.getElementById("returnMoney").innerHTML = returnMoney;
+        }
+
+    </script>
+</body>
+
+</html>
