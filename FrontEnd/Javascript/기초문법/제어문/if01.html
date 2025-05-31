@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>if~esle if ... ~else</title>
+</head>
+
+<body>
+    <script>
+        //  다중 제어문
+        let kor, eng, mat;  // 입력변수
+        let tot, avg, grade;  // 출력변수
+
+        kor = 89;
+        eng = 45;
+        mat = 90;
+
+        tot = kor + eng + mat;
+        avg = tot / 3;
+
+        // 학점기준 (평균기준)
+        // 90이상: A, 80이상: B, 70이상: C, 그외는 F        
+
+        if (avg >= 90) {
+            grade = 'A';
+        } else if (avg >= 80) {
+            grade = 'B';
+        } else if (avg >= 70) {
+            grade = 'C';
+        } else {
+            grade = 'F';
+        }
+
+        alert('평균: ' + avg + '\n 학점 : ' + grade);
+
+    </script>
+</body>
+
+</html>
