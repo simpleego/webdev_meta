@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container {
+            border: 10px solid #ddd;
+            width: 350px;
+            margin: 0px auto;
+            padding: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h1>라디오버튼 / 체크박스<br>데이터 가져오기</h1>
+        <h2>성별</h2>
+        남 : <input type="radio" name="gender" value="남">
+        여 : <input type="radio" name="gender" checked value="여">
+        <p>
+            <label>선택한 성별 :
+                <span id="genderChioce"></span>
+            </label>
+        </p>
+        <h2>색깔</h2>
+        <label>빨강 : <input type="checkbox" name="color" value="빨강"></label>
+        <label></label>주황 : <input type="checkbox" name="color" value="주황"></label>
+        <label></label>노랑 : <input type="checkbox" name="color" value="노랑"></label>
+        <label></label>초록 : <input type="checkbox" name="color" value="초록"></label>
+        <label></label>파랑 : <input type="checkbox" name="color" value="파랑"></label>
+        <p>
+            <label>선택한 색깔 :
+                <span id="color"></span>
+            </label>
+        </p>
+        <button onclick="userSelection()">선택 확인</button>
+    </div id="container">
+</body>
+<script>
+    function userSelection() {
+
+        // 라디오 값 가져오기
+        let gender = document.getElementsByName('gender');
+        let selectedGender; // 여기에 선택된 radio 버튼의 값이 담기게 된다.
+
+        for (let i = 0; i < gender.length; i++) {
+            if (gender[i].checked) {
+                selectedGender = gender[i].value;
+            }
+        }
+
+        document.getElementById("genderChioce").innerHTML = selectedGender;
+
+
+        // checkbox 값 가져오기
+        let color = document.getElementsByName('color');
+        let colorChoice=''; // 여기에 선택된 radio 버튼의 값이 담기게 된다.
+        for (let i = 0; i < color.length; i++) {
+            if (color[i].checked) {
+                colorChoice += color[i].value + ' ';
+            }
+        }
+        document.getElementById("color").innerHTML = colorChoice;
+    }
+</script>
+
+</html>
