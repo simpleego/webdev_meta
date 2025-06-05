@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>반복문 for</h1>
+    <p>1~10까지의 합</p>
+</body>
+<script>
+    // 1~10까지의 합을 출력
+    // let sum = 0;
+    // for(let i=1; i<=10; i++ ){
+    //     //document.write('==>'+i);
+    //     sum = sum + i;
+    // }
+    // document.write(sum);
+
+    let sum = 0;
+    let nums=[4,50,100,8,17,9,12,11,3,16];
+    let avg;
+
+    for(let i=0; i<10; i++ ){
+        if(nums[i] >= 10) {
+            console.log(nums[i]);
+            sum = sum + nums[i];
+        }
+    }
+    document.write(sum+'<br>');
+
+    avg = sum/10;
+    document.write('평균:'+avg);
+   
+
+</script>
+
+</html>

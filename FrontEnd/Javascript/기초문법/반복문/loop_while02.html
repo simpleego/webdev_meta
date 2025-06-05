@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>do~while 반복문</title>
+</head>
+
+<body>
+    <h1>do~while : 조건이 만족하는 동안 반복</h1>
+    <p> 사용자 입력 후 입력을 체크하여 정상 입력을 받을 때까지 반복</p>
+
+</body>
+<script>
+    let jumsu = 0;
+
+    do {
+
+        jumsu = parseInt(prompt('점수입력 0~100 까지'));
+
+    } while (jumsu < 0 || jumsu > 100 );
+
+    alert('정상 입력!!');
+
+
+
+
+</script>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반복문 break</title>
+</head>
+
+<body>
+    <h1>반복문 탈출 break</h1>
+    <p> 반복문 수행중 필요한 조건이 있으면 이에 따라 반복을 종료하고 탈출한다.</p>
+</body>
+<script>
+    // for (let i = 2; i <= 9; i++) {
+    //     document.write(`<h3>${i}단</h3>`);
+    //     for (let j = 1; j <= 9; j++) {
+    //         document.write(`${i}x${j}=${i * j} <br>`);
+    //     }
+
+    //     if (i == 4) {
+    //         break;
+    //     }
+
+    for (let i = 2; i <= 9; i++) {
+        document.write(`<h3>${i}단</h3>`);
+        for (let j = 1; j <= 9; j++) {
+            document.write(`${i}x${j}=${i * j} <br>`);
+        }
+        if (i == 4) break;
+    }
+    
+    // for (let i = 2; i <= 9; i++) {
+        
+    //     // 짝수단만 출력하세요.
+    //     if(i%2 != 0) continue;
+    //     document.write(`<h3>${i}단</h3>`);
+
+    //     for (let j = 1; j <= 9; j++) {
+    //         document.write(`${i}x${j}=${i * j} <br>`);
+    //     }
+
+    // }
+</script>
+
+</html>

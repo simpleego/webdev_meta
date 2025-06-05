@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>while 반복문</title>
+</head>
+
+<body>
+    <h1>while : 조건이 만족하는 동안 반복</h1>
+    <p>현재 체중 :
+        <input type="text" id="weight" placeholder="현재 체중입력">
+    </p>
+    <button onclick="diaet()">다이어트 확인</button>
+    <p>목표 체중 : <span id="targetWeight"></span></p>
+    <p>현재 체중 : <span id="weightOut"></span></p>
+
+    <textarea rows="10"  cols="20" id="out">
+
+    </textarea>
+
+</body>
+<script>
+    // 현재 체중에서 목표체중에 도달할 때까지 반복해서 다이어트 한다.
+    let targetWeight = parseInt(prompt("목표체중 : "));
+    let weight = parseInt(prompt("현재체중 : "));
+
+    document.querySelector("#weightOut").innerHTML = weight;
+    document.querySelector("#targetWeight").innerHTML = targetWeight;
+
+
+    //document.write(`목표체중 : ${targetWeight} <br>`);
+    let result = '';
+
+    function diaet() {
+
+        while (weight >= targetWeight) {
+            console.log('--->');
+            // 다이어트
+            result += '식단조절' + '<br>';
+            result += '운동하기..' + '<br>';
+
+            // 체중 검사
+            weight = parseInt(prompt('현재 체중 :'));
+            document.querySelector("#out").innerHTML = result;
+            document.querySelector("#weightOut").value
+               = `현재체중 : ${weight}`;
+        }
+    }
+</script>
+
+</html>
