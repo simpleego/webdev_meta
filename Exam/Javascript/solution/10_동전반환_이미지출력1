@@ -1,0 +1,88 @@
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동전 교환 프로그램</title>
+    <style>
+        body {
+            width: 50%;
+            margin: 50px auto;
+            padding: 3em;
+            border: 10px solid #ddd;
+        }
+        .coin-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .coin {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h2>교환할 금액 입력:</h2>
+    <input type="number" id="amount" placeholder="금액 입력">
+    <button onclick="exchangeCoins()">계산</button>
+
+    <h2>동전 개수:</h2>
+    <div id="coinsOutput"></div>
+
+    <script>
+        function getChange(amount) {
+            const coins = [
+                { value: 1000, img: "1000won1.png" },
+                { value: 500, img: "500won1.png" },
+                { value: 100, img: "100won1.png" },
+                { value: 50, img: "50won.png" },
+                { value: 10, img: "10won1.png" },
+                { value: 5, img: "5won.png" },
+                { value: 1, img: "1won.png" }
+            ];
+            
+            const result = [];
+
+            for (let coin of coins) {
+                if (amount >= coin.value) {
+                    result.push({ 
+                        value: coin.value, 
+                        count: Math.floor(amount / coin.value), 
+                        img: coin.img 
+                    });
+                    amount %= coin.value;
+                }
+            }
+            console.log(result)
+            return result;
+        }
+
+        function exchangeCoins() {
+            const amount = parseInt(document.getElementById("amount").value);
+            const coins = getChange(amount);
+            const outputDiv = document.getElementById("coinsOutput");
+            outputDiv.innerHTML = "";
+
+            coins.forEach(coin => {
+                const container = document.createElement("div");
+                container.className = "coin-container";
+                container.innerHTML = `<strong>${coin.value}원:</strong> `;
+                
+                for (let i = 0; i < coin.count; i++) {
+                    const img = document.createElement("img");
+                    img.src = coin.img;
+                    img.className = "coin";
+                    container.appendChild(img);
+                }            
+                console.log(typeof container);
+                console.log(container);
+                outputDiv.appendChild(container);
+            });
+        }
+    </script>
+</body>
+</html>
+```
