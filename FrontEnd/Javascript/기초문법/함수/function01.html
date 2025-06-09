@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>변수의 범위 </h1>
+    <h2>전역변수</h2>
+    <p>프로그램 전체 영역에서 해당 변수를 사용할 수 있음</p>
+    <p>함수 밖에서 선언</p>
+    <h2>지역변수</h2>
+    <p>함수내에서만 사용되는 변수</p>
+    <p>함수내에서 선언</p>
+</body>
+<script>
+    let sum=10;
+
+    function addNum(){
+        sum = sum + 10
+        console.log('sum:'+sum)
+        return sum;
+    }
+
+    console.log(addNum());
+</script>
+</html>
