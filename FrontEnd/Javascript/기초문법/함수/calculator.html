@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사칙연산 계산기</title>
+    <style>
+        #container {
+            width: 500px;
+            margin: 10px auto;
+            padding: 15px;
+            border: 10px solid #ddd;
+        }
+
+        input {
+            padding: 8px 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h1>사칙연산 계산기</h1>
+        <form onsubmit="return false">
+            숫자 : <input type="text" name="" id="num1">
+            숫자 : <input type="text" name="" id="num2">
+            <div style="padding: 10px;">
+                <button onclick="add()">+</button>
+                <button onclick="sub()">-</button>
+                <button onclick="calc('x')">x</button>
+                <button onclick="calc('/')">/</button>
+                <button onclick="sqr()">x^2</button>
+            </div>
+            결과 : <input type="text" name="" id="out">
+        </form>
+    </div>
+    <script>
+        // 함수작성
+        'use strict'
+
+        // 전역변수 설정
+        let num1;
+        let num2;
+        //let result = 0;
+
+        function add() {
+            let result;
+            // 화면으로부터 데이터 가져오기
+            //et sum;
+            // 데이터 가져오기
+            getData();
+            // document.querySelector('#num1').value
+
+            // 덧셈 처리
+            result = num1 + num2;
+
+            // 화면에 결과 출력
+            //document.getElementById('out').value = sum;
+            pritData(result);
+        }
+
+        function sub() {
+
+            let result;
+            getData();
+            // let num1 = document.getElementById('num1').value;
+            // let num2 = document.getElementById('num2').value;
+            // document.querySelector('#num1').value
+
+            // 덧셈 처리
+            result = num1 - num2;
+
+            // 화면에 결과 출력
+            // document.getElementById('out').value = result;
+            pritData(result);
+        }
+
+        function getData() {
+
+            num1 = document.getElementById('num1').value;
+            num2 = document.getElementById('num2').value;
+
+            num1 = parseFloat(num1);
+            num2 = parseFloat(num2);
+        }
+
+        function calc(op) {
+            let result;
+            getData();
+
+            if (op === 'x') {
+                result = num1 * num2;
+            } else {
+                if (num2 !== 0) {
+                    result = num1 / num2;
+                } else {
+                    alert('0으로 나눌 수 없습니다.');
+                }
+            }
+            result = result.toFixed(2);
+            pritData(result);
+        }
+
+        // 숫자값의 제곱을 반환
+        function sqr(){            
+            let result;
+            getData();
+            result = multipleNum(num1);
+            pritData(result);
+        }
+
+        function pritData(result) {
+            document.getElementById('out').value = result; 
+        }
+
+        function multipleNum(num1){
+            //let result = num1*num2;
+            return num1*num1;
+        }
+    </script>
+</body>
+
+</html>
