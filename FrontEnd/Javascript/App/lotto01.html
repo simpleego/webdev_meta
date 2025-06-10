@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또번호 추첨기</title>
+</head>
+<body>
+    <div>
+         <button>입력1</button>
+         <p id="lotto">나도 로또번호 출력</p>
+         <!-- <button onclick="doit(10)">입력1</button> -->
+        <!--<button>입력2</button>
+        <button>입력3</button> -->
+    </div>
+    <p id="result"></p>
+</body>
+<script>
+    const lotto = function(){
+        let result = ' ';
+
+        for(let i=0; i<10; i++){
+            result += '★';
+        }
+
+        document.querySelector("#result").innerHTML = result;
+    };
+    const btn = document.querySelector("button");
+    btn.addEventListener('click', lotto);
+
+    const btnP = document.querySelector("#lotto");
+    btnP.addEventListener('click', lotto);
+
+</script>
+</html>

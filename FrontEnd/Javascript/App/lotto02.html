@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또번호 추첨기</title>
+</head>
+
+<body>
+    <div>
+        <button>섞기</button>
+        <p id="lotto">로또번호 출력</p>
+
+    </div>
+    <p id="result"></p>
+</body>
+<script>
+    const lotto = [];
+    for(let i=1; i<=45; i++){
+        lotto[i-1] = i;
+    }
+
+    document.querySelector("#lotto").innerHTML = lotto;
+
+    // 배열데이터 섞기
+    let a = 10;
+    let b = 20;
+    let c;
+
+    // a와 b값을 서로 교환
+    console.log(a + ',' + b)
+
+    c = a;
+    a = b;
+    b = c;
+
+    console.log(a + ',' + b)
+
+    // 배열 교환
+    let j;
+    let k;
+
+    for (let i = 0; i < 100; i++) {
+
+        j = parseInt(Math.random() * lotto.length);
+        k = parseInt(Math.random() * lotto.length);
+
+        if (j !== k) {
+            c = lotto[j];
+            lotto[j] = lotto[k];
+            lotto[k] = c;
+        }
+
+    }
+
+    document.querySelector("#result").innerHTML = lotto;
+
+
+    const btn = document.querySelector("button");
+    btn.addEventListener('click', lotto);
+
+
+</script>
+
+</html>
