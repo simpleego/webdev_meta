@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>배열 학습</h1>
+    <p id="data"></p>
+    <p id="result"></p>
+    <p id="result1"></p>
+    <button onclick="doit()">성적분석</button>
+
+</body>
+<script>
+    //  성적데이터 처리
+    const sungjuk = [85, 42, 77, 95, 60, 55, 90, 33, 70, 82, 89];
+    
+    let j = 0;
+    let result = '';
+    
+    // 데이터 화면 출력
+    for (let i = 0; i < sungjuk.length; i++) {
+        result += `${sungjuk[i]}, `;
+    }
+    document.querySelector("#data").innerHTML = result;
+
+    function doit() {
+        result = '';
+        let tot = 0;
+        let avg;
+        let passCount = 0;
+        let failCount = 0;
+
+        for (let i = 0; i < sungjuk.length; i++) {
+
+            tot += sungjuk[i];
+
+            if (sungjuk[i] >= 60) {
+                result += '합격, ';
+                passCount++;
+            } else {
+                result += '불합격, ';
+                failCount++;
+            }
+        }
+
+        avg = tot / sungjuk.length;
+
+        document.querySelector("#result").innerHTML = result;
+
+        result = `평균 : ${avg.toFixed(2)}<br> 합격자수:${passCount}<br> 불합격자수 : ${failCount}`;
+
+        document.querySelector("#result1").innerHTML = result;
+    }
+
+</script>
+
+</html>

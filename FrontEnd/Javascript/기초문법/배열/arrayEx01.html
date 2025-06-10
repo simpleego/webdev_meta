@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>배열 학습</h1>
+    <p id="data"></p>
+    <p id="result"></p>
+
+</body>
+<script>
+    //  성적데이터 처리
+    const sungjuk = [85,42,77,95,60,55,90,33,70,82,89];
+    
+    let j=0;
+    let result='';
+
+    // 데이터 화면 출력
+    for(let i=0; i<sungjuk.length; i++){
+        result += `${sungjuk[i]}, `;
+    }
+    document.querySelector("#data").innerHTML = result;
+
+    result='';
+
+    for(let i=0; i<10; i++){
+
+        if(sungjuk[i] >= 60){
+            result += ' P, ';
+        }else {
+           result += ' F, ';
+        }
+    }
+
+    document.querySelector("#result").innerHTML = result;
+
+
+</script>
+</html>
