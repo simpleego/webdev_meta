@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>JavaScript Strings</h1>
+<h2>The length Property</h2>
+
+<p>The length of the string is:</p>
+<p id="demo"></p>
+
+<script>
+    //      01234567890123
+let text = '020625-4403619';
+let age;
+
+// 1,2 2000년 이전 3,4 2000년이후
+let gender = text.charAt(7);
+gender = parseInt(gender);
+
+let year = gender >= 3 ? 2000: 1900;
+console.log(year);
+
+year = year + parseInt(text.slice(0,2));
+console.log(year);
+
+// 주민번호 앞에 2자리를 구해서 처리
+// 1900/2000 을 더해서 년도를 구한다.
+// 현재 주민번호를 입력으로 나이를 구하세요.
+
+
+// 올해가 몇 년인지 알아내서 처리let 
+let thisYear = new Date();
+//thisArea = thisArea.getFullYear();
+thisYear = thisYear.getFullYear();
+age = thisYear - year;
+
+document.getElementById("demo").innerHTML 
+        = `나이 : ${age}`;
+
+</script>
+
+</body>
+</html>
