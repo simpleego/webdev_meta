@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>객체 배우기</title>
+</head>
+<body>
+    <h1>객체란?</h1>
+    <p>데이와 함수(기능)을 함께 갖고 있는 것</p>
+</body>
+<script>
+    // 사용자 객체 생성
+    const user = {
+        name: "홍길동",
+        age: 30,
+        sayHello: function(){
+            alert("안녕 자바스크립트!!");
+        }
+    };
+    
+    user.sayHi = function(){
+        alert("안녕자바스크립트 함수야!!");
+    }
+    console.log(user);
+
+    function sayHello() {
+        alert("안녕 친구야");
+    }
+
+    user.hi = sayHello;
+
+    //user.hi();
+    user.sayHello();
+   
+
+</script>
+</html>

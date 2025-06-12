@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>객체 배우기</title>
+</head>
+<body>
+    <h1>객체란?</h1>
+    <p>데이와 함수(기능)을 함께 갖고 있는 것</p>
+</body>
+<script>
+    // 사용자 객체 생성
+    let user = {
+        name: "홍길동",
+        age: 30,
+        grade: {kor:30,eng:40,mat:50,stat:90},
+        "likes birds": true  
+        //grade: [30,40,50,90]
+    };
+    console.log('name:'+user["likes birds"]);
+
+    console.log(user.age);
+    console.log(user.name);
+    delete user.age;    // 객체 속성 삭제
+
+    console.log(user.age);
+    //console.log(user.grade[0]);
+    console.log(user.grade.kor);
+
+</script>
+</html>

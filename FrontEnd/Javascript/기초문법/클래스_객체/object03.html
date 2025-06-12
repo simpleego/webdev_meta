@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>객체 배우기</title>
+</head>
+<body>
+    <h1>객체란?</h1>
+    <p>데이와 함수(기능)을 함께 갖고 있는 것</p>
+</body>
+<script>
+    // 사용자 객체 생성
+    const user = {
+        name: "홍길동",
+        age: 30,
+    };
+    
+   const admin = user;
+   console.log('user:'+user);
+   console.log('admin:'+admin);
+
+   user.name = "김영희";
+   console.log('admin:'+admin.name);
+
+   admin.age = 35;
+   console.log('age:'+user.age);
+
+   // 객체 복사 
+   let clone = {};
+   for(let key in user){
+        clone[key] = user[key];
+   }
+
+   console.log('clone:'+clone);
+
+   clone.name="홍길동";
+
+</script>
+</html>
