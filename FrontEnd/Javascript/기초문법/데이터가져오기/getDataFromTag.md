@@ -65,15 +65,67 @@ console.log(username.value, email.value);
 - 반복 작업을 깔끔하게 처리하고, 여러 입력 요소를 손쉽게 다룰 수 있게 해줍니다.
 
 ---
-
-### ✨ 활용 팁
-- `value`는 `<input>`, `<select>`, `<textarea>` 등에서만 사용 가능하고,
-- 텍스트 노드를 다룰 때는 `textContent` 또는 `innerText`를 사용하세요.
+좋아요 jong! `Array.from()`과 `forEach()`를 조합하면 반복 처리나 선택된 HTML 요소들의 값을 수집할 때 매우 유용하죠. 실제 예제를 통해 보여드릴게요.
 
 ---
 
-필요하시면 jQuery 같은 라이브러리를 쓴 방식이나 React, Vue 같은 프레임워크에서의 접근 방식까지도 알려드릴게요. 프론트엔드 흐름을 제대로 이해하고 싶으시다면 이 흐름을 아는 게 정말 큰 도움이 돼요 😉  
-어떤 방식이 가장 관심 가시나요? 아니면 예제를 확장해서 보여드릴까요? 🎯  
+### ✅ 예제 1: 체크박스 여러 개 선택한 값 출력하기
+```html
+<form id="hobbyForm">
+  <label><input type="checkbox" name="hobby" value="reading" checked> 독서</label>
+  <label><input type="checkbox" name="hobby" value="music"> 음악</label>
+  <label><input type="checkbox" name="hobby" value="sports" checked> 운동</label>
+</form>
+
+<script>
+  const checkboxes = document.querySelectorAll('input[name="hobby"]:checked');
+
+  const selected = Array.from(checkboxes);  // NodeList를 배열로 변환
+  selected.forEach(checkbox => {
+    console.log(checkbox.value);  // "reading", "sports"
+  });
+</script>
+```
+
+---
+
+### ✅ 예제 2: `<select multiple>`에서 선택된 항목들을 출력하기
+```html
+<select id="colors" multiple>
+  <option value="red" selected>빨강</option>
+  <option value="green">초록</option>
+  <option value="blue" selected>파랑</option>
+</select>
+
+<script>
+  const selectEl = document.getElementById('colors');
+  const selectedOptions = Array.from(selectEl.selectedOptions);
+
+  selectedOptions.forEach(option => {
+    console.log(option.value);  // "red", "blue"
+  });
+</script>
+```
+
+---
+
+### ✅ 예제 3: 여러 `<input>` 필드 값을 한 번에 가져오기
+```html
+<form id="userForm">
+  <input type="text" name="username" value="홍길동">
+  <input type="email" name="email" value="hong@example.com">
+  <input type="number" name="age" value="30">
+</form>
+
+<script>
+  const inputs = document.querySelectorAll('#userForm input');
+
+  Array.from(inputs).forEach(input => {
+    console.log(`${input.name}: ${input.value}`);
+    // 예시 출력: username: 홍길동, email: hong@example.com, age: 30
+  });
+</script>
+```
 
 ---
 
