@@ -1,10 +1,17 @@
 # HTML 화면에서 데이터 가져오기
 
+> ## 화면에서 가져온 모든 것은 1차적으로 요소 객체이다. 
+> ## 따라서 반드시 요소가 갖고 있는 고유한 속성(value,src, innerText, innerHTML...)을 지정하여 필요한 값을 가져온다.
+
 ### 1. `<input type="text">` – 일반 텍스트 입력
 ```html
 <input type="text" id="username" value="홍길동">
+<input type="text" id="num">
 <script>
   const username = document.getElementById('username').value;
+  const $num = document.querySelector('#num');  // 요소를 객체로 가져오기
+  let num =  parseInt($num.value);    // 요소객체의 속성을 이용하여 값을 가져오기
+                                        // 추가적으로 필요한 형태로 변환(숫자)
 </script>
 ```
 
