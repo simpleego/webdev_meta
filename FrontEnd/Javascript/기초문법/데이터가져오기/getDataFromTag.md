@@ -165,10 +165,11 @@ console.log(username.value, email.value);
   const gender = document.querySelector('input[name="gender"]:checked').value;
 </script>
 ```
-```html
+
 ---
 반복문 for를 이용한 방법
-```
+
+```html
 <h2>색깔</h2>
 <label>빨강 : <input type="checkbox" name="color" value="빨강"></label>
 <label></label>주황 : <input type="checkbox" name="color" value="주황"></label>
@@ -193,7 +194,6 @@ for (let i = 0; i < color.length; i++) {
 document.getElementById("color").innerHTML = colorChoice;
 </script>
 ```
-```
 
 ### 5. `<input type="checkbox">` – 체크박스
 ```html
@@ -202,7 +202,7 @@ document.getElementById("color").innerHTML = colorChoice;
   const isAgreed = document.getElementById('agree').checked;  // true or false
 </script>
 ```
----
+
 ```javascript
 // 라디오 값 가져오기
 <script>
