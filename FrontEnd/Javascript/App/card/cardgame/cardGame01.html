@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카드게임</title>
+    <style>
+        body {
+            text-align: center;
+            width: 50%;
+            margin: 30px auto;
+        }
+
+        .card {
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            border: 1px solid #444;
+            background-color: #f0f;
+        }
+
+        #gameBoard {
+            display: grid;
+            /* grid-template-columns: repeat(3,100px); */
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>카드 숫자 맞추기 게임-1단계</h1>
+    <p>게임판 그리기</p>
+    <label for="">행수 : </label>
+    <input type="number" value="3" id="rows" min="3" max="10">
+    <label for="">렬수 : </label>
+    <input type="number" value="3" id="cols" min="3" max="10">
+
+    <button id="board">게임판 만들기</button>
+
+    <div id="gameBoard">
+        <!-- 여기에 카드 넣기  -->
+    </div>
+</body>
+<script>
+    const $gameBoard = document.querySelector("#gameBoard");
+    const $board = document.querySelector("#board");
+
+    $board.addEventListener('click', () => {
+
+        // 버튼 연결하고 이벤트 등록
+        const rowCount = parseInt(document.querySelector("#rows").value);
+        const colCount = parseInt(document.querySelector("#cols").value);
+
+        const totalCells = rowCount * colCount;
+        console.log('totalCells :' + totalCells);
+
+        $gameBoard.style.gridTemplateColumns = `repeat(${colCount},60px)`;
+        $gameBoard.innerHTML = '';
+
+        const pairCount = totalCells/2;
+        const numbers = []; 
+
+        for(let i=1; i<= pairCount; i++){
+            numbers.push(i);
+            numbers.push(i);
+        }
+        console.log(numbers);
+
+        let temp = 0;
+        for(let i=numbers.length-1;  i > 0; i--){
+            const j = Math.floor(Math.random()*(i+1));
+            console.log('j:'+j);
+            temp = numbers[i];
+            numbers[i] = numbers[j];
+            numbers[j] = temp;
+        }
+
+        for (let i = 0; i < totalCells; i++) {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.textContent = numbers[i];
+            $gameBoard.appendChild(card);
+        }
+    });
+
+
+</script>
+
+</html>
