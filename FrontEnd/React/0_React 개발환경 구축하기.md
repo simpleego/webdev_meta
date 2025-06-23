@@ -1,7 +1,7 @@
 # React 개발환경 구축하기 
 
 --- 
-## 1.Node.JS 설치
+## 1. Node.JS 설치
 > Node 사이트 방문하여 다운로드 후 설치
 ## 2. yarn 설치
 >npm install -g yarn 
