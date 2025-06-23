@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카드게임</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        #gameBoard {
+            display: grid;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .card {
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            border: 1px solid #444;
+            background-color: #f2f2f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .hidden {
+            background-color: #ccc;
+            color: transparent;
+        }
+
+        .matched {
+            background-color: #b2f2bb;
+            cursor: default;
+        }
+
+        .card.empty {
+            background-color: #ddd;
+            border-style: dashed;
+            pointer-events: none;
+        }
+
+        #gameOver {
+            display: none;
+
+        }
+    </style>
+</head>
+
+<body>
+    <h2>🧠 숫자 짝 맞추기 - 3단계</h2>
+
+    <div id="setup">
+        <button id="hint">🔍 힌트 (1회)</button>
+
+        <label>행과 열 (정사각형): <input type="number" id="sizeInput" value="5" min="2" max="10"></label>
+        <button onclick="startGame()">게임 시작</button>
+    </div>
+
+    <div id="gameBoard">
+    </div>
+
+    <!-- 게임 종료시 보여줄 대화상자 -->
+     <div id="gameOver">
+        <h3>게임종료</h3>
+        <p id="summaryGame"></p>
+        <button onclick="closeModal()">확인</button>
+     </div>
+</body>
+<script>
+
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+    let hintUsed = false;
+
+    // 게임점수 기준값
+    let clickCount = 0;
+    let startTime = null;
+
+    const cards = [];
+    let pairCount = 0;
+
+
+    // 게임판 초기에 보여주기
+    window.onload = ()=> {
+        document.getElementById("sizeInput").value = 3;
+        startGame();
+    }
+
+    function startGame() {
+
+        // 버튼 연결하고 이벤트 등록
+        const size = parseInt(document.querySelector("#sizeInput").value);
+        const totalCells = size * size;
+        const hasEmpty = totalCells % 2 !== 0;
+        pairCount = Math.floor(totalCells / 2);
+        const numbers = [];
+
+        // 카드 짝번호 생성
+        for (let i = 1; i <= pairCount; i++) {
+            numbers.push(i);
+            numbers.push(i);
+        }
+        console.log(numbers);
+
+        // 짝이 없는 번호 처리
+        if (hasEmpty) {
+            numbers.push(null);
+        }
+
+        // 카드 섞기
+        for (let i = numbers.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+        }
+
+        const board = document.getElementById("gameBoard");
+        board.style.gridTemplateColumns = `repeat(${size}, 60px)`;
+        board.innerHTML = "";
+
+        firstCard = secondCard = null;
+        lockBoard = false;
+        hintUsed = false;
+
+        startTime = Date.now();
+
+        const hintBtn = document.querySelector('#hint');
+        hintBtn.disabled = false;
+        hintUsed = false;
+        hintBtn.textContent = '힌트 (1회)';
+
+   
+
+        // 카드 생성 및 카드 배열 처리
+        numbers.forEach(num => {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            if (num === null) {
+                card.classList.add("empty");
+                card.textContent = "";
+            } else {
+                card.dataset.value = num;
+                card.textContent = num;
+                card.classList.add("hidden");
+
+                // 카드 클릭시 수행할 동작(짝맞추기)
+                card.addEventListener("click", () => {
+
+                    if(lockBoard || card.classList.contains("matched") || !card.classList.contains("hidden")) return;
+
+                    
+                    clickCount++;
+
+                    card.classList.remove("hidden");
+
+                    if (!firstCard) {
+                        firstCard = card;
+                    } else if (!secondCard && card !== firstCard) {
+                        secondCard = card
+                        lockBoard = true;
+
+                        const v1 = firstCard.dataset.value;
+                        const v2 = secondCard.dataset.value;
+
+                        setTimeout(() => {
+
+                            if (v1 === v2) {
+                                firstCard.classList.add("matched");
+                                secondCard.classList.add("matched");
+                                checkGameOver();
+                            } else {
+                                firstCard.classList.add("hidden");
+                                secondCard.classList.add("hidden");
+                            }
+
+                            firstCard = null;
+                            secondCard = null;
+                            lockBoard = false;
+                            
+                        }, 1000);
+                    }
+                });
+
+            }
+
+            board.appendChild(card);
+            cards.push(card);
+        });
+
+        setTimeout(() => {
+            cards.forEach(card => {
+                if (!card.classList.contains("empty")) {
+                    card.classList.add("hidden");
+                }
+            });
+        }, 3000);
+
+
+
+        // 카드 보여주기 힌드
+        //const hintBtn = document.querySelector("#hint");
+
+        // 힌트: 2초간 보여주고 숨기기
+        hintBtnCount = 0;
+        document.querySelector("#hint").addEventListener("click", () => {
+
+            hintBtnCount++;
+
+            // 카드 보여주기
+            cards.forEach(card => {
+                card.classList.remove("hidden");
+            });
+
+            setTimeout(() => {
+                cards.forEach(card => {
+                    //card 속성 추가
+                    card.classList.add("hidden");
+                });
+            }, 2000);
+
+            if (hintBtnCount >= 2) {
+                hintBtn.disabled = true;
+            }
+
+        });       
+
+    }
+
+    function checkGameOver(){
+        const matched = cards.filter(card=> card.classList.contains("matched")).length;
+        if(pairCount*2 == matched){            
+            const duration = (Date.now() - startTime) / 1000;
+            // alert('클릭횟수 : '+clickCount+'수행시간 :'+duration);
+            const modal = document.querySelector("#gameOver");
+            const modalContent = document.querySelector("#summaryGame");
+            modalContent.textContent = `클릭횟수 : '${clickCount}'수행시간 :'${duration}`;
+            modal.style.display = 'block';
+        }
+        
+    }
+
+
+</script>
+
+</html>
