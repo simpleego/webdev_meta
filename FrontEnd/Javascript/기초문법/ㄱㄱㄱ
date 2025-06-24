@@ -1,0 +1,600 @@
+```js
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사다리게임</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .setup-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .participant-inputs, .result-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .input-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-item label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .input-item input {
+            margin-bottom: 0;
+        }
+
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .game-area {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .ladder-container {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .participants, .results {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+        }
+
+        .participant, .result {
+            padding: 10px 15px;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .result {
+            background: #764ba2;
+        }
+
+        .ladder {
+            position: relative;
+            margin: 20px 0;
+            height: 300px;
+        }
+
+        .vertical-line {
+            position: absolute;
+            width: 3px;
+            height: 100%;
+            background: #333;
+            top: 0;
+        }
+
+        .horizontal-line {
+            position: absolute;
+            height: 3px;
+            background: #e74c3c;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .horizontal-line:hover {
+            background: #c0392b;
+        }
+
+        .horizontal-line.active {
+            background: #f39c12;
+            height: 5px;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.6);
+        }
+
+        .play-controls {
+            margin: 20px 0;
+        }
+
+        .player-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .result-display {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .path-line {
+            position: absolute;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .vertical-path {
+            width: 4px;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(231, 76, 60, 0.4);
+        }
+
+        .horizontal-path {
+            height: 4px;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
+        }
+
+        @keyframes drawVertical {
+            from { height: 0; }
+            to { height: var(--target-height); }
+        }
+
+        @keyframes drawHorizontal {
+            from { width: 0; }
+            to { width: var(--target-width); }
+        }
+
+        .path-line.draw-vertical {
+            animation: drawVertical 0.8s ease-out forwards;
+        }
+
+        .path-line.draw-horizontal {
+            animation: drawHorizontal 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🪜 사다리게임</h1>
+        
+        <div class="setup-section">
+            <div class="input-group">
+                <label for="numParticipants">참여자 인원수:</label>
+                <input type="number" id="numParticipants" min="2" max="10" value="4" onchange="updateParticipantInputs()">
+            </div>
+            
+            <div class="input-group">
+                <label>참여자 이름:</label>
+                <div id="participantInputs" class="participant-inputs"></div>
+            </div>
+            
+            <div class="input-group">
+                <label>결과:</label>
+                <div id="resultInputs" class="result-inputs"></div>
+            </div>
+            
+            <button onclick="generateLadder()">사다리 생성</button>
+        </div>
+
+        <div class="game-area" id="gameArea" style="display: none;">
+            <div class="participants" id="participantsList"></div>
+            
+            <div class="ladder-container">
+                <div class="ladder" id="ladder"></div>
+            </div>
+            
+            <div class="results" id="resultsList"></div>
+            
+            <div class="play-controls">
+                <div class="player-buttons" id="playerButtons"></div>
+                <button onclick="resetGame()">다시 시작</button>
+            </div>
+            
+            <div class="result-display" id="resultDisplay" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        let participants = [];
+        let results = [];
+        let ladderData = [];
+        let isPlaying = false;
+
+        // 페이지 로드 시 초기 입력 필드 생성
+        function initializeInputs() {
+            updateParticipantInputs();
+        }
+
+        function updateParticipantInputs() {
+            const numParticipants = parseInt(document.getElementById('numParticipants').value);
+            const participantInputs = document.getElementById('participantInputs');
+            const resultInputs = document.getElementById('resultInputs');
+            
+            // 참여자 입력 필드 생성
+            participantInputs.innerHTML = '';
+            for (let i = 0; i < numParticipants; i++) {
+                const inputItem = document.createElement('div');
+                inputItem.className = 'input-item';
+                inputItem.innerHTML = `
+                    <label>참여자 ${i + 1}</label>
+                    <input type="text" id="participant${i}" placeholder="이름을 입력하세요" value="${getDefaultParticipantName(i)}">
+                `;
+                participantInputs.appendChild(inputItem);
+            }
+            
+            // 결과 입력 필드 생성
+            resultInputs.innerHTML = '';
+            for (let i = 0; i < numParticipants; i++) {
+                const inputItem = document.createElement('div');
+                inputItem.className = 'input-item';
+                inputItem.innerHTML = `
+                    <label>결과 ${i + 1}</label>
+                    <input type="text" id="result${i}" placeholder="결과를 입력하세요" value="${getDefaultResultName(i)}">
+                `;
+                resultInputs.appendChild(inputItem);
+            }
+        }
+
+        function getDefaultParticipantName(index) {
+            const defaultNames = ['철수', '영희', '민수', '지혜', '현우', '수진', '태희', '승민', '다은', '준호'];
+            return defaultNames[index] || `참여자${index + 1}`;
+        }
+
+        function getDefaultResultName(index) {
+            const defaultResults = ['1등', '2등', '3등', '4등', '5등', '6등', '7등', '8등', '9등', '10등'];
+            return defaultResults[index] || `결과${index + 1}`;
+        }
+
+        function generateLadder() {
+            const numParticipants = parseInt(document.getElementById('numParticipants').value);
+            
+            // 참여자 이름 수집
+            participants = [];
+            for (let i = 0; i < numParticipants; i++) {
+                const participantName = document.getElementById(`participant${i}`).value.trim();
+                if (!participantName) {
+                    alert(`참여자 ${i + 1}의 이름을 입력해주세요!`);
+                    return;
+                }
+                participants.push(participantName);
+            }
+            
+            // 결과 수집
+            results = [];
+            for (let i = 0; i < numParticipants; i++) {
+                const resultName = document.getElementById(`result${i}`).value.trim();
+                if (!resultName) {
+                    alert(`결과 ${i + 1}을 입력해주세요!`);
+                    return;
+                }
+                results.push(resultName);
+            }
+            
+            // 중복 검사
+            if (new Set(participants).size !== participants.length) {
+                alert('참여자 이름이 중복됩니다. 다른 이름을 사용해주세요!');
+                return;
+            }
+            
+            createLadder();
+            document.getElementById('gameArea').style.display = 'block';
+            document.getElementById('resultDisplay').style.display = 'none';
+        }
+
+        function createLadder() {
+            const participantsList = document.getElementById('participantsList');
+            const resultsList = document.getElementById('resultsList');
+            const ladder = document.getElementById('ladder');
+            const playerButtons = document.getElementById('playerButtons');
+            
+            // 참여자 표시
+            participantsList.innerHTML = '';
+            participants.forEach(participant => {
+                const div = document.createElement('div');
+                div.className = 'participant';
+                div.textContent = participant;
+                participantsList.appendChild(div);
+            });
+            
+            // 결과 표시
+            resultsList.innerHTML = '';
+            results.forEach(result => {
+                const div = document.createElement('div');
+                div.className = 'result';
+                div.textContent = result;
+                resultsList.appendChild(div);
+            });
+            
+            // 플레이어 버튼 생성
+            playerButtons.innerHTML = '';
+            participants.forEach((participant, index) => {
+                const button = document.createElement('button');
+                button.textContent = `${participant} 선택`;
+                button.onclick = () => playLadder(index);
+                playerButtons.appendChild(button);
+            });
+            
+            // 사다리 생성
+            generateLadderStructure();
+        }
+
+        function generateLadderStructure() {
+            const ladder = document.getElementById('ladder');
+            ladder.innerHTML = '';
+            ladderData = [];
+            
+            const numParticipants = participants.length;
+            const ladderWidth = Math.min(600, numParticipants * 120);
+            const ladderHeight = 300;
+            const stepWidth = ladderWidth / (numParticipants - 1);
+            
+            ladder.style.width = ladderWidth + 'px';
+            ladder.style.height = ladderHeight + 'px';
+            
+            // 세로선 생성
+            for (let i = 0; i < numParticipants; i++) {
+                const verticalLine = document.createElement('div');
+                verticalLine.className = 'vertical-line';
+                verticalLine.style.left = (i * stepWidth) + 'px';
+                ladder.appendChild(verticalLine);
+            }
+            
+            // 가로선 생성 (무작위)
+            const numLevels = 8;
+            ladderData = Array(numLevels).fill().map(() => Array(numParticipants - 1).fill(false));
+            
+            for (let level = 0; level < numLevels; level++) {
+                for (let i = 0; i < numParticipants - 1; i++) {
+                    // 30% 확률로 가로선 생성, 연속된 가로선 방지
+                    if (Math.random() < 0.3 && !ladderData[level][i-1] && !ladderData[level][i+1]) {
+                        ladderData[level][i] = true;
+                        
+                        const horizontalLine = document.createElement('div');
+                        horizontalLine.className = 'horizontal-line';
+                        horizontalLine.style.left = (i * stepWidth) + 'px';
+                        horizontalLine.style.top = ((level + 1) * (ladderHeight / (numLevels + 1))) + 'px';
+                        horizontalLine.style.width = stepWidth + 'px';
+                        ladder.appendChild(horizontalLine);
+                    }
+                }
+            }
+        }
+
+        function playLadder(startIndex) {
+            if (isPlaying) return;
+            isPlaying = true;
+            
+            // 이전 결과 숨기기
+            document.getElementById('resultDisplay').style.display = 'none';
+            
+            // 모든 가로선 초기화
+            document.querySelectorAll('.horizontal-line').forEach(line => {
+                line.classList.remove('active');
+            });
+            
+            // 이전 경로 선 제거
+            document.querySelectorAll('.path-line').forEach(line => {
+                line.remove();
+            });
+            
+            let currentPosition = startIndex;
+            const numLevels = ladderData.length;
+            const ladder = document.getElementById('ladder');
+            const ladderWidth = parseInt(ladder.style.width);
+            const ladderHeight = parseInt(ladder.style.height);
+            const stepWidth = ladderWidth / (participants.length - 1);
+            const stepHeight = ladderHeight / (numLevels + 1);
+            
+            let currentLevel = 0;
+            
+            function animateNextStep() {
+                if (currentLevel > numLevels) {
+                    // 게임 종료
+                    showResult(startIndex, currentPosition);
+                    isPlaying = false;
+                    return;
+                }
+                
+                const yStart = currentLevel * stepHeight;
+                const yEnd = (currentLevel + 1) * stepHeight;
+                const currentX = currentPosition * stepWidth;
+                
+                // 현재 레벨에서 이동할 방향 확인
+                let moveDirection = null;
+                let newPosition = currentPosition;
+                
+                if (currentLevel < numLevels) {
+                    if (currentPosition > 0 && ladderData[currentLevel][currentPosition - 1]) {
+                        moveDirection = 'left';
+                        newPosition = currentPosition - 1;
+                    } else if (currentPosition < participants.length - 1 && ladderData[currentLevel][currentPosition]) {
+                        moveDirection = 'right';
+                        newPosition = currentPosition + 1;
+                    }
+                }
+                
+                // 세로선 그리기
+                drawVerticalPath(currentX, yStart, stepHeight, () => {
+                    if (moveDirection && currentLevel < numLevels) {
+                        // 가로선 하이라이트
+                        const connectionIndex = moveDirection === 'left' ? currentPosition - 1 : currentPosition;
+                        highlightPath(currentLevel, connectionIndex);
+                        
+                        // 가로선 그리기
+                        const startX = currentX;
+                        const endX = newPosition * stepWidth;
+                        const direction = moveDirection === 'right' ? 1 : -1;
+                        
+                        drawHorizontalPath(
+                            Math.min(startX, endX), 
+                            yEnd, 
+                            Math.abs(endX - startX), 
+                            () => {
+                                currentPosition = newPosition;
+                                currentLevel++;
+                                setTimeout(animateNextStep, 200);
+                            }
+                        );
+                    } else {
+                        // 가로선이 없으면 다음 단계로
+                        currentLevel++;
+                        setTimeout(animateNextStep, 200);
+                    }
+                });
+            }
+            
+            // 애니메이션 시작
+            animateNextStep();
+        }
+
+        function drawVerticalPath(x, y, height, callback) {
+            const pathLine = document.createElement('div');
+            pathLine.className = 'path-line vertical-path draw-vertical';
+            pathLine.style.left = (x - 2) + 'px';
+            pathLine.style.top = y + 'px';
+            pathLine.style.setProperty('--target-height', height + 'px');
+            
+            document.getElementById('ladder').appendChild(pathLine);
+            
+            setTimeout(() => {
+                if (callback) callback();
+            }, 800);
+        }
+
+        function drawHorizontalPath(x, y, width, callback) {
+            const pathLine = document.createElement('div');
+            pathLine.className = 'path-line horizontal-path draw-horizontal';
+            pathLine.style.left = x + 'px';
+            pathLine.style.top = (y - 2) + 'px';
+            pathLine.style.setProperty('--target-width', width + 'px');
+            
+            document.getElementById('ladder').appendChild(pathLine);
+            
+            setTimeout(() => {
+                if (callback) callback();
+            }, 600);
+        }
+
+        function highlightPath(level, connectionIndex) {
+            const horizontalLines = document.querySelectorAll('.horizontal-line');
+            horizontalLines.forEach((line, index) => {
+                const lineLevel = Math.floor(index / (participants.length - 1));
+                const lineConnection = index % (participants.length - 1);
+                if (lineLevel === level && lineConnection === connectionIndex) {
+                    line.classList.add('active');
+                }
+            });
+        }
+
+        function showResult(startIndex, endIndex) {
+            const resultDisplay = document.getElementById('resultDisplay');
+            const startName = participants[startIndex];
+            const endResult = results[endIndex];
+            
+            resultDisplay.innerHTML = `
+                <div style="font-size: 24px; margin-bottom: 10px;">🎉 결과 발표 🎉</div>
+                <div><strong>${startName}</strong>님의 결과는</div>
+                <div style="font-size: 28px; margin-top: 10px;"><strong>${endResult}</strong> 입니다!</div>
+            `;
+            resultDisplay.style.display = 'block';
+        }
+
+        function resetGame() {
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('resultDisplay').style.display = 'none';
+            isPlaying = false;
+            updateParticipantInputs(); // 입력 필드 초기화
+        }
+
+        // 페이지 로드 시 초기 설정
+        window.onload = function() {
+            initializeInputs();
+        };
+    </script>
+</body>
+</html>
+```
