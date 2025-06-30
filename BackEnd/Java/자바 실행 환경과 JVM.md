@@ -1,3 +1,3 @@
 # 자바 실행환경과 JVM
+<img src='https://github.com/user-attachments/assets/42724e1e-d209-4f4e-a10f-688eda8fa13c' width=700>
 
-![image](https://github.com/user-attachments/assets/de8723d0-d55f-4bb4-a1c2-866c905d9c3d)
