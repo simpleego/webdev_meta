@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카카오 맵 - 현재 위치</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        
+        #map {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        
+        .controls {
+            margin-bottom: 10px;
+        }
+        
+        button {
+            background-color: #fee500;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background-color: #fdd835;
+        }
+        
+        .info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .click-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e8f5e8;
+            border-radius: 4px;
+            font-size: 14px;
+            border-left: 4px solid #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <h1>카카오 맵 - 현재 위치</h1>
+    
+    <div class="controls">
+        <button onclick="getCurrentLocation()">현재 위치 찾기</button>
+    </div>
+    
+    <div id="map"></div>
+    
+    <div class="info" id="locationInfo">
+        현재 위치 정보가 표시됩니다.
+    </div>
+    
+    <div class="click-info" id="clickInfo">
+        지도를 클릭하면 해당 위치의 좌표가 표시됩니다.
+    </div>
+
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7d5b1320d903edbbaa5adc05bbc791f8&libraries=services"></script>
+
+    <script>
+        // 카카오 맵 API 키 설정 (여기에 실제 키를 입력하세요)
+        const KAKAO_API_KEY = '7d5b1320d903edbbaa5adc05bbc791f8';
+        
+        let map;
+        let marker;
+        let clickMarker; // 클릭 위치 마커
+        
+        // 카카오 맵 API 동적 로드
+        function loadKakaoMapScript() {
+            return new Promise((resolve, reject) => {
+                if (window.kakao && window.kakao.maps) {
+                    resolve();
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_API_KEY}&libraries=services`;
+                script.onload = () => {
+                    if (window.kakao && window.kakao.maps) {
+                        resolve();
+                    } else {
+                        reject(new Error('카카오 맵 API 로드 실패'));
+                    }
+                };
+                script.onerror = () => {
+                    reject(new Error('카카오 맵 스크립트 로드 실패'));
+                };
+                document.head.appendChild(script);
+            });
+        }
+        
+        // 카카오 맵 초기화 (기본 위치: 서울시청)
+        function initMap() {
+            const container = document.getElementById('map');
+            const options = {
+                center: new kakao.maps.LatLng(37.566826, 126.9786567),
+                level: 3
+            };
+            
+            map = new kakao.maps.Map(container, options);
+            
+            // 기본 마커 생성 (현재 위치용)
+            marker = new kakao.maps.Marker({
+                position: map.getCenter()
+            });
+            marker.setMap(map);
+            
+            // 지도 클릭 이벤트 등록
+            kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+                // 클릭한 위치의 위도, 경도 정보 가져오기
+                const latlng = mouseEvent.latLng;
+                const lat = latlng.getLat();
+                const lon = latlng.getLng();
+                
+                // 클릭 위치에 마커 표시
+                if (clickMarker) {
+                    clickMarker.setMap(null); // 기존 마커 제거
+                }
+                
+                clickMarker = new kakao.maps.Marker({
+                    position: latlng,
+                    image: new kakao.maps.MarkerImage(
+                        'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
+                        new kakao.maps.Size(64, 69),
+                        { offset: new kakao.maps.Point(27, 69) }
+                    )
+                });
+                clickMarker.setMap(map);
+                
+                // 클릭한 위치 정보 표시
+                updateClickInfo(lat, lon);
+                
+                // 클릭한 위치의 주소 변환
+                getAddressFromClickCoords(lat, lon);
+            });
+        }
+        
+        // 현재 위치 가져오기
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        
+                        // 지도 중심을 현재 위치로 이동
+                        const locPosition = new kakao.maps.LatLng(lat, lon);
+                        map.setCenter(locPosition);
+                        
+                        // 마커 위치 업데이트
+                        marker.setPosition(locPosition);
+                        
+                        // 현재 위치 정보 표시
+                        updateLocationInfo(lat, lon);
+                        
+                        // 주소 변환 (좌표 -> 주소)
+                        getAddressFromCoords(lat, lon);
+                    },
+                    function(error) {
+                        console.error('위치 정보를 가져올 수 없습니다:', error);
+                        alert('위치 정보를 가져올 수 없습니다. 브라우저 설정을 확인해주세요.');
+                    }
+                );
+            } else {
+                alert('이 브라우저에서는 위치 정보를 지원하지 않습니다.');
+            }
+        }
+        
+        // 위치 정보 업데이트
+        function updateLocationInfo(lat, lon) {
+            const info = document.getElementById('locationInfo');
+            info.innerHTML = `
+                <strong>현재 위치:</strong><br>
+                위도: ${lat.toFixed(6)}<br>
+                경도: ${lon.toFixed(6)}
+            `;
+        }
+        
+        // 좌표를 주소로 변환
+        function getAddressFromCoords(lat, lon) {
+            const geocoder = new kakao.maps.services.Geocoder();
+            const coord = new kakao.maps.LatLng(lat, lon);
+            
+            geocoder.coord2Address(coord.getLng(), coord.getLat(), function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    const addr = result[0].address;
+                    const info = document.getElementById('locationInfo');
+                    info.innerHTML += `<br><strong>주소:</strong> ${addr.address_name}`;
+                }
+            });
+        }
+        
+        // 클릭 위치 정보 업데이트
+        function updateClickInfo(lat, lon) {
+            const info = document.getElementById('clickInfo');
+            info.innerHTML = `
+                <strong>클릭한 위치:</strong><br>
+                위도: ${lat.toFixed(6)}<br>
+                경도: ${lon.toFixed(6)}
+            `;
+        }
+        
+        // 클릭한 좌표를 주소로 변환
+        function getAddressFromClickCoords(lat, lon) {
+            const geocoder = new kakao.maps.services.Geocoder();
+            const coord = new kakao.maps.LatLng(lat, lon);
+            
+            geocoder.coord2Address(coord.getLng(), coord.getLat(), function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    const addr = result[0].address;
+                    const info = document.getElementById('clickInfo');
+                    info.innerHTML += `<br><strong>주소:</strong> ${addr.address_name}`;
+                } else {
+                    const info = document.getElementById('clickInfo');
+                    info.innerHTML += `<br><strong>주소:</strong> 주소 정보를 가져올 수 없습니다.`;
+                }
+            });
+        }
+        
+        // 페이지 로드 시 카카오 맵 API 로드 후 초기화
+        window.addEventListener('DOMContentLoaded', async function() {
+            try {
+                await initMap(); //loadKakaoMapScript();
+                
+            } catch (error) {
+                console.error('카카오 맵 초기화 실패:', error);
+                document.getElementById('locationInfo').innerHTML = 
+                    '<strong>오류:</strong> 카카오 맵 API 로드에 실패했습니다. API 키를 확인해주세요.';
+            }
+        });
+    </script>
+</body>
+</html>

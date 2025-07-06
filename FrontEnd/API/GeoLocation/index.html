@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>위도 경도 구해오기</title>
+</head>
+
+<body>
+  <div>위치정보
+    <p id="location"></p>
+  </div>
+</body>
+<script>
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const long = position.coords.longitude;
+        const $loc = document.querySelector('#location').innerHTML = `"위도 : " ${lat} 경도 : ${long}`
+        console.log("위도:", position.coords.latitude);
+        console.log("경도:", position.coords.longitude);
+      },
+      (error) => {
+        console.error("위치 정보를 가져오는 데 실패했습니다.", error);
+      }
+    );
+  } else {
+    console.log("이 브라우저에서는 위치 정보 기능을 지원하지 않습니다.");
+  }
+
+</script>
+
+</html>
