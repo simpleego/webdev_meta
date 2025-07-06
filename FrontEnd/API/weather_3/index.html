@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>기상청 위도/경도 기반 날씨</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="weather-app">
+    <h2>기상청 날씨 정보</h2>
+    <input type="text" id="lat" placeholder="위도 (예: 36.35)" />
+    <input type="text" id="lon" placeholder="경도 (예: 127.38)" />
+    <button onclick="getLocationAndThen()">날씨 확인</button>
+    <div id="result"></div>
+  </div>
+  <script src="geoLocation.js"></script>
+  <script src="gridConverter.js"></script>
+  <script src="kma.js"></script>
+</body>
+</html>

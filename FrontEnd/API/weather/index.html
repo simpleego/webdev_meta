@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>기상청 날씨 시각화</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="weather-app">
+    <h2>기상청 날씨 정보</h2>
+    <input type="text" id="city" placeholder="도시명 (예: 대전)" />
+    <button onclick="getWeather()">확인</button>
+    <div id="result"></div>
+  </div>
+  <script src="gridConverter.js"></script>
+  <script src="kma.js"></script>
+</body>
+</html>
