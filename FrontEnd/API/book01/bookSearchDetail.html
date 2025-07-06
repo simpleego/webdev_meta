@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>도서 검색 with Kakao API</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>📕 도서 검색</h1>
+    <input type="text" id="query" placeholder="책 제목을 입력하세요..." />
+    <button onclick="searchBooks()">검색</button>
+    <div id="results"></div>
+  </div>
+
+  <!-- 생략된 기존 코드 ... -->
+  <div id="results"></div>
+
+  <!-- 모달 구조 추가 -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- 📘 목차용 모달 추가 -->
+<div id="toc-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeTOCModal()">&times;</span>
+    <div id="toc-body"></div>
+  </div>
+</div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
