@@ -17,6 +17,30 @@ public class Box {
         return volume;
     }
 
+    public  Box whosLargest(Box box1, Box box2){
+        if(box1.volume > box2.volume)
+            return box1;
+        else
+            return box2;
+    }
+
+    public  Box heightLargest(Box box1, Box box2){
+        if(box1.height > box2.height)
+            return box1;
+        else
+            return box2;
+    }
+
+    @Override
+    public String toString() {
+        return "Box{" +
+                "width=" + width +
+                ", height=" + height +
+                ", volume=" + volume +
+                ", length=" + length +
+                '}';
+    }
+
     public static void main(String[] args) {
         Box box, box1;
 
@@ -26,6 +50,12 @@ public class Box {
 
         int volume = box.getVolume();
         System.out.println("박스 부피:"+volume);
+
+        Box bigBbox = box.whosLargest(box,box1);
+        System.out.println(bigBbox);
+
+        Box heightBig = box.heightLargest(box,box1);
+        System.out.println(heightBig);
 
     }
 }
