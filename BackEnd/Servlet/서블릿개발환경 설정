@@ -1,0 +1,87 @@
+# JSP와 서블릿 개발을 위한 JDK 11 기반 환경을 설정하는 방법
+
+### 🧰 1. 필수 구성 요소
+
+| 구성 요소       | 설명                                                                 |
+|----------------|----------------------------------------------------------------------|
+| **JDK 11**      | Java 개발 키트. Oracle JDK 또는 OpenJDK 사용 가능                     |
+| **Apache Tomcat** | JSP/서블릿 실행을 위한 웹 컨테이너. Tomcat 9 또는 10 추천             |
+| **IDE**         | 개발 도구. **Eclipse IDE for Enterprise Java and Web Developers** 추천 |
+
+---
+
+### 🛠️ 2. 개발 환경 설정 단계
+
+#### ✅ JDK 11 설치
+- [Oracle JDK 11 다운로드](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) 또는 [OpenJDK 11 다운로드](https://jdk.java.net/archive/)
+- 설치 후 환경 변수 설정:
+  - `JAVA_HOME` → JDK 설치 경로
+  - `Path` → `%JAVA_HOME%\bin`
+
+#### ✅ Apache Tomcat 설치
+- [Tomcat 공식 사이트](https://tomcat.apache.org/)에서 Tomcat 9 또는 10 다운로드
+- 설치 후 환경 변수 설정:
+  - `CATALINA_HOME` → Tomcat 설치 경로
+  - `CLASSPATH` → `servlet-api.jar` 경로 추가 (예: `%CATALINA_HOME%\lib\servlet-api.jar`)
+
+#### ✅ Eclipse IDE 설치
+- [Eclipse 다운로드 페이지](https://www.eclipse.org/downloads/)
+- **Eclipse IDE for Enterprise Java and Web Developers** 선택
+- 버전은 JDK11과 호환이 되도록  4.18 이상을 선택
+- 설치 후 Tomcat 연동:
+  - `Window > Preferences > Server > Runtime Environments`에서 Tomcat 추가
+  - 동적 웹 프로젝트 생성: `File > New > Dynamic Web Project`
+
+---
+
+### 📄 3. JSP/서블릿 예제 실행
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<html>
+  <head><title>Hello JSP</title></head>
+  <body>
+    <h1>Hello, JSP!</h1>
+  </body>
+</html>
+```
+
+- 위 코드를 `Hello.jsp`로 저장 후 `http://localhost:8080/프로젝트명/Hello.jsp`에서 확인
+
+---
+
+### 📚 참고 자료
+
+- [JSP가 실행되는 개발 환경 구축하기](https://velog.io/@honey8951/%EC%9E%90%EB%B0%94-%EC%9B%B9%EC%9D%84-%EB%8B%A4%EB%A3%A8%EB%8A%94-%EA%B8%B0%EC%88%A0-JSP%EA%B0%80-%EC%8B%A4%ED%96%89%EB%90%98%EB%8A%94-%EA%B0%9C%EB%B0%9C-%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0): JDK, Tomcat, Eclipse 설치 및 연동 방법을 상세히 설명
+- [Studyeasy의 JSP 및 서블릿 설정 가이드](https://studyeasy.org/ko/course-articles/jsp-servlets-articles-ko/s01l01-jsp-%EB%B0%8F-%EC%84%9C%EB%B8%94%EB%A6%BF-%EC%84%A4%EC%A0%95/): JDK 버전 선택부터 예제 실행까지 전체 흐름을 정리
+
+---
+
+필요하시면 IntelliJ 기반 설정도 알려드릴 수 있어요. 혹시 운영체제가 macOS인지 Windows인지도 알려주시면 더 맞춤형으로 도와드릴게요! 😊
+
+JDK 11과 호환되는 Eclipse 버전은 꽤 다양하지만, 안정성과 최신 기능을 고려할 때 다음 버전들을 추천드릴게요:
+
+---
+
+### ✅ Eclipse 버전 추천 (JDK 11 호환)
+
+| Eclipse 버전       | 출시 시기     | JDK 11 호환 여부 |
+|--------------------|---------------|------------------|
+| Eclipse 4.18       | 2020-12       | ✅ 완벽 호환      |
+| Eclipse 4.19 ~ 4.23| 2021-03 ~ 2022-03 | ✅ 완벽 호환  |
+| Eclipse 2022-06    | 2022-06       | ✅ 완벽 호환      |
+| Eclipse 2023-03 이후| 2023-03 ~ 현재 | ✅ 완벽 호환      |
+
+> 참고로 Eclipse 4.18 이상부터는 **JDK 11 이상이 필수**입니다.
+
+---
+
+### 🛠️ 추천 IDE 다운로드 링크
+
+- [Eclipse 공식 다운로드 페이지](https://www.eclipse.org/downloads/)
+  - **Eclipse IDE for Enterprise Java and Web Developers** 선택
+  - 설치 후 JDK 11 경로를 `Installed JREs`에 등록하고, `Compiler` 설정에서 Java 11로 지정해 주세요
+
+---
+
+Jong님이 웹 개발을 하신다면, 위 IDE 버전 중 최신 안정화 버전인 **Eclipse 2023-12** 또는 **2024-03**을 추천드려요. 혹시 운영체제나 추가적인 요구사항이 있으시면 더 맞춤형으로 도와드릴게요! 😊
