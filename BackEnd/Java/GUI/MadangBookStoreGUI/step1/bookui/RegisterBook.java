@@ -122,6 +122,7 @@ public class RegisterBook extends JFrame {
         bookList.add(book);
 
         jTextArea.append(book.toString()+"\n");
+
         for (Book book1 : bookList){
             System.out.println(book1);
         }
