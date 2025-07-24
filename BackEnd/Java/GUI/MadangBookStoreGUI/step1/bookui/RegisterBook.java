@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class RegisterBook extends JFrame {
         // 컴포넌트 생성
         id = new JTextField(10);
         id.setText("아이디 입력...");
+
         name = new JTextField(10);
         publisher = new JTextField(10);
         price = new JTextField(10);
@@ -43,34 +46,6 @@ public class RegisterBook extends JFrame {
         registerButton = new JButton("책등록");
         resetButton = new JButton("초기화");
         // 컴포넌트 이벤트 등록 및 구현
-
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String id_ = id.getText();
-                String name_ = name.getText();
-                String publisher_ = publisher.getText();
-                String price_ = price.getText();
-
-                if( id_.length() < 3 || id_.isEmpty()){
-                    JOptionPane.showMessageDialog(null,"아이디를 입력하세요.");
-                    return;
-                }
-
-                Book book = new Book(Integer.parseInt(id_),
-                        name_,
-                        publisher_,
-                        Integer.parseInt(price_)
-                        );
-                bookList.add(book);
-
-                jTextArea.append(book.toString()+"\n");
-                for (Book book1 : bookList){
-                    System.out.println(book1);
-                }
-            }
-        });
-
         // 입력 패널
         JPanel inputPannel = new JPanel();
         inputPannel.setLayout(new GridLayout(0,2));
@@ -87,8 +62,69 @@ public class RegisterBook extends JFrame {
         this.add(inputPannel);
         this.add(jTextArea,BorderLayout.SOUTH);
 
+
+        // 키보드 엔터키로 등록 처리
+        KeyAdapter enterKey = new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    registerBook();
+                }
+            }
+        };
+        registerButton.addKeyListener(enterKey);
+        price.addKeyListener(enterKey);
+        id.addKeyListener(enterKey);
+        name.addKeyListener(enterKey);
+        publisher.addKeyListener(enterKey);
+
+
+        // 화면 지우기
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                id.setText("");
+                name.setText("");
+                publisher.setText("");
+                price.setText("");
+            }
+        });
+
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                registerBook();
+            }
+        });
+
+
+
         // 컨테이너 활성화(화면에 보이게)
         setVisible(true);
+    }
+
+    private void registerBook() {
+        String id_ = id.getText();
+        String name_ = name.getText();
+        String publisher_ = publisher.getText();
+        String price_ = price.getText();
+
+        if( id_.length() < 3 || id_.isEmpty()){
+            JOptionPane.showMessageDialog(null,"아이디를 입력하세요.");
+            return;
+        }
+
+        Book book = new Book(Integer.parseInt(id_),
+                name_,
+                publisher_,
+                Integer.parseInt(price_)
+        );
+        bookList.add(book);
+
+        jTextArea.append(book.toString()+"\n");
+        for (Book book1 : bookList){
+            System.out.println(book1);
+        }
     }
 
     public static void main(String[] args) {
