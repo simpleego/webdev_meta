@@ -5,9 +5,12 @@ import step1.entity.Book;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class BookManagerUI extends JFrame {
+public class BookManagerUI extends JFrame implements ActionListener {
     private JTextField tfName, tfPublisher, tfPrice, tfSearch;
     private JButton btnAdd, btnDelete, btnSearch;
     private JTable bookTable;
@@ -93,12 +96,79 @@ public class BookManagerUI extends JFrame {
                     book.getPublisher(),
                     book.getPrice()
             });
-
-
         });
 
+        // 도서 검색
+        btnSearch.addActionListener(e->{
+            String serchKeyword = tfSearch.getText().trim().toLowerCase();
+            tableModel.setRowCount(0);
+            for (Book book : bookList){
+                if(book.getName().toLowerCase().contains(serchKeyword)){
+                    tableModel.addRow(new Object[]{book.getId(),
+                            book.getName(),
+                            book.getPublisher(),
+                            book.getPrice()
+                    });
+                }
+            }
+        });
+
+        tableModel.addTableModelListener(e->{
+            int row = e.getFirstRow();
+            int col = e.getColumn();
+            if(row >= 0 && col >= 0){
+                int id = (int) tableModel.getValueAt(row,0);
+                // 현재 테이블에서 선택한 행의 책이름, 출판사, 가격으로 수정
+                for (Book book : bookList){
+                    if(book.getId() == id){
+                        book.setName((String) tableModel.getValueAt(row,1));
+                        book.setPublisher((String) tableModel.getValueAt(row,2));
+                        book.setPrice(Integer.parseInt(tableModel.getValueAt(row,3).toString()));
+                        System.out.println(book);
+                        break;
+                    }
+                }
+            }
+        });
+
+        // 도서 삭제
+        btnDelete.addActionListener(this);
 
         setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+            int row = bookTable.getSelectedRow();
+
+            // 선택한 행이 없으면
+            if(row == -1){
+                JOptionPane.showMessageDialog(this,
+                        "삭제할 행을 선택하세요.");
+                return;
+            }
+
+            // 선택한 행이 있으면
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "정말 삭제하시겠습니까?", "확인",
+                    JOptionPane.YES_NO_OPTION);
+
+            if(confirm == JOptionPane.YES_NO_OPTION){
+                int id = (int)tableModel.getValueAt(row,0);
+                bookList.removeIf(book -> book.getId() == id);
+                //도서 저장소(내부 자료구조)에서 삭제
+//                for (Book book : bookList){
+//                    if(book.getId() == id){
+//                        bookList.remove(id-1);
+//                        //bookList.remove(book);
+//                        break;
+//                    }
+//                }
+
+                // 테이블 화면에서 삭제
+                tableModel.removeRow(row);
+
+            }
     }
 
     public static void main(String[] args) {
