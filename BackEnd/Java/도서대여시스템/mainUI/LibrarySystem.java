@@ -4,13 +4,14 @@ import entity.Book;
 import entity.Customer;
 import entity.Rental;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LibrarySystem {
     static ArrayList<Book> bookList = new ArrayList<>();
     static ArrayList<Customer> customers = new ArrayList<>();
-    ArrayList<Rental> rentals = new ArrayList<>();
+    static ArrayList<Rental> rentals = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -19,13 +20,17 @@ public class LibrarySystem {
         // 도서등록
         System.out.println("도서 등록");
         addBook();
+        addBook();
+        addBook();
 
         // 회원등록
         System.out.println("회원 등록");
         addCustomer();
+        addCustomer();
 
         // 도서 대여
         System.out.println("도서 대여");
+        rentBook();
         rentBook();
     }
 
@@ -48,9 +53,24 @@ public class LibrarySystem {
 
         System.out.println(" 선택한 책은 "+bookList.get(bookIndex).getTitle());
 
+        System.out.println("대여할 고객 선택 (0~"+(customers.size()-1)+"): ");
+        for (int i = 0; i < customers.size(); i++) {
+            System.out.println(i+": "+customers.get(i).getName());            
+        }
+        
+        int customerIndex = kbd.nextInt();
+        
+        // 대여 처리
+        Rental rental = new Rental(bookList.get(bookIndex),
+                customers.get(customerIndex),
+                LocalDate.now());
+        rentals.add(rental);
 
-
-
+        // 대여 리스트 출력
+        for (int i = 0; i < rentals.size(); i++) {
+            System.out.println(rentals.get(i).getCustomer().getName()+
+                    ","+ rentals.get(i).getBook().getTitle());
+        }
     }
 
     private static void addCustomer() {

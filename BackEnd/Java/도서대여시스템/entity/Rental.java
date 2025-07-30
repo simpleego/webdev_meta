@@ -13,6 +13,18 @@ public class Rental {
         this.rentDate = rentDate;
     }
 
+    public Book getBook() {
+        return book;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public LocalDate getRentDate() {
+        return rentDate;
+    }
+
     @Override
     public String toString() {
         return "Rental{" +
