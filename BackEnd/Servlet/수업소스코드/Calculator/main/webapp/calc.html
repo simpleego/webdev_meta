@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>간단 계산기</title>
+<style type="text/css">
+	#wraper {
+		width: 300px;
+		margin: 10px auto;
+		padding: 10px;
+		border: 1px solid #ccc;
+	}
+</style>
+</head>
+<body>
+	<div id="wraper">
+		<form action="calc" method="post">
+			<label>숫자1 : </label>
+			<input type="text" name="num1" value="0"><br>
+			
+			<label>숫자2 : </label>
+			<input type="text" name="num2" value="0"><br>
+			
+			<input type="submit" name="operator" value="+">
+			<input type="submit" name="operator" value="-">
+			<input type="submit" name="operator" value="x">
+			<input type="submit" name="operator" value="/">
+		</form>
+	
+	</div>
+
+</body>
+</html>
