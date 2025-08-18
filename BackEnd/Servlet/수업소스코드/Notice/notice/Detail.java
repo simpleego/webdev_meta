@@ -64,8 +64,8 @@ public class Detail extends HttpServlet{
 			e.printStackTrace();
 		}
 		
-		
-		
+		// View 처리 (모델을 화면처리 프로그램에게 전달)
+		req.getRequestDispatcher("/notice/detail.jsp").forward(req, resp);
 	}
 
 }

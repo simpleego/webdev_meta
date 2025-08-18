@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
@@ -8,22 +9,7 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%
-	int id_ = Integer.parseInt(request.getParameter("id"));
 	
-	String url = "jdbc:mysql://localhost:3306/notice";
-	String id = "root";
-	String pw = "pjc0129";
-	String sql = "select * from notice where id=?";
-	
-	// DB 커넥션 작업
-	Class.forName("com.mysql.cj.jdbc.Driver");
-	Connection conn =  DriverManager.getConnection(url,id,pw);
-	PreparedStatement pstmt = conn.prepareStatement(sql);
-	pstmt.setInt(1, id_);
-	
-	ResultSet rs = pstmt.executeQuery(sql);
-	rs.next();// 해당 ID값으로 이동하여 꺼낼 데이터의 주소를 가르킨다.
-
 %>
 <html>
 
@@ -100,7 +86,7 @@
                         <h1 class="hidden">고객메뉴</h1>
                         <ul class="linear-layout">
                             <li><a href="/member/home"><img src="/images/txt-mypage.png" alt="마이페이지" /></a></li>
-                            <li><a href="/notice/list.html"><img src="/images/txt-customer.png" alt="고객센터" /></a></li>
+                            <li><a href="/notice/list.jsp"><img src="/images/txt-customer.png" alt="고객센터" /></a></li>
                         </ul>
                     </nav>
 
@@ -172,32 +158,32 @@
 						<table class="table">
 							<tbody>
 								<tr>
-									<th><%=rs.getInt("ID") %></th>
-									<td class="text-align-left text-indent text-strong text-orange" colspan="3"><%=rs.getString("TITLE") %></td>
+									<th>${id}</th>
+									<td class="text-align-left text-indent text-strong text-orange" colspan="3">${title }</td>
 								</tr>
 								<tr>
 									<th>작성일</th>
-									<td class="text-align-left text-indent" colspan="3"><%=rs.getInt("REGDATE") %>	</td>
+									<td class="text-align-left text-indent" colspan="3">${regdate} </td>
 								</tr>
 								<tr>
 									<th>작성자</th>
-									<td><%=rs.getString("WRITER_ID") %></td>
+									<td>${writerId} </td>
 									<th>조회수</th>
-									<td><%=rs.getInt("HIT") %></td>
+									<td>${hit}</td>
 								</tr>
 								<tr>
 									<th>첨부파일</th>
-									<td colspan="3"></td>
+									<td colspan="3">파일명 : ${files}") </td>
 								</tr>
 								<tr class="content">
-									<td><%=rs.getString("CONTENT") %></td>
+									<td>${content } </td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 					
 					<div class="margin-top text-align-center">
-						<a class="btn btn-list" href="list.html">목록</a>
+						<a class="btn btn-list" href="list.jsp">목록</a>
 					</div>
 					
 					<div class="margin-top">
