@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+import com.simple.notice.entity.Notice;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -45,14 +47,20 @@ public class Detail extends HttpServlet{
 			String files = rs.getString("FILES");
 			String content = rs.getString("CONTENT");
 			
+			//  Notice 객체로 변환(구조화)
+			Notice notice =  new Notice(id_, title, regDate, writerId, hit, files, content);
+			
+			
 			// request 객체에 모델을 담음
-			req.setAttribute("id", id_);
-			req.setAttribute("title", title);
-			req.setAttribute("regdate", regDate);
-			req.setAttribute("writerId", writerId);
-			req.setAttribute("hit", hit);
-			req.setAttribute("files", files);
-			req.setAttribute("content", content);
+//			req.setAttribute("id", id_);
+//			req.setAttribute("title", title);
+//			req.setAttribute("regdate", regDate);
+//			req.setAttribute("writerId", writerId);
+//			req.setAttribute("hit", hit);
+//			req.setAttribute("files", files);
+//			req.setAttribute("content", content);
+			
+			req.setAttribute("n", notice);
 			
 			rs.close();
 			pstmt.close();

@@ -1,22 +1,12 @@
+<%@page import="com.simple.notice.entity.Notice"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="java.sql.DriverManager"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    
-<%
-	String url = "jdbc:mysql://localhost:3306/notice";
-	String id = "root";
-	String pw = "pjc0129";
-	String sql = "select * from notice";
-	
-	// DB 커넥션 작업
-	Class.forName("com.mysql.cj.jdbc.Driver");
-	Connection conn =  DriverManager.getConnection(url,id,pw);
-	Statement stmt = conn.createStatement();
-	ResultSet rs = stmt.executeQuery(sql);
-%>    
+    pageEncoding="UTF-8"%>   
 
 <!DOCTYPE html>
 <html>
@@ -190,16 +180,22 @@
 						</tr>
 					</thead>
 					<tbody>
-					<% while(rs.next()){ %>		
-					<tr>
-						<td><%= rs.getInt("ID") %></td>
-						<td class="title indent text-align-left"><a href="/notice/detail?id=<%= rs.getInt("ID") %>"><%= rs.getString("TITLE") %></a></td>
-						<td><%= rs.getString("WRITER_ID") %></td>
-						<td>
-							<%= rs.getDate("REGDATE") %>		
-						</td>
-						<td><%= rs.getInt("HIT") %></td>
-					</tr>							
+					<%
+						List<Notice> list = (List<Notice>)request.getAttribute("list");
+					
+						for(Notice n : list ){ 
+							pageContext.setAttribute("n", n);						
+					%>
+						<tr>
+							<td>${n.id }</td>
+							<td class="title indent text-align-left">
+							<a href="/notice/detail?id=${n.id }">${n.title }</a></td>
+							<td>${n.writerId }</td>
+							<td>
+								${n.regdate }		
+							</td>
+							<td>${n.hit }</td>
+						</tr>							
 					
 					<%} %>
 					

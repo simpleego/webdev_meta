@@ -86,7 +86,7 @@
                         <h1 class="hidden">고객메뉴</h1>
                         <ul class="linear-layout">
                             <li><a href="/member/home"><img src="/images/txt-mypage.png" alt="마이페이지" /></a></li>
-                            <li><a href="/notice/list.jsp"><img src="/images/txt-customer.png" alt="고객센터" /></a></li>
+                            <li><a href="/notice/list"><img src="/images/txt-customer.png" alt="고객센터" /></a></li>
                         </ul>
                     </nav>
 
@@ -158,32 +158,32 @@
 						<table class="table">
 							<tbody>
 								<tr>
-									<th>${id}</th>
-									<td class="text-align-left text-indent text-strong text-orange" colspan="3">${title }</td>
+									<th>${n.id}</th>
+									<td class="text-align-left text-indent text-strong text-orange" colspan="3">${n.title }</td>
 								</tr>
 								<tr>
 									<th>작성일</th>
-									<td class="text-align-left text-indent" colspan="3">${regdate} </td>
+									<td class="text-align-left text-indent" colspan="3">${n.regdate} </td>
 								</tr>
 								<tr>
 									<th>작성자</th>
-									<td>${writerId} </td>
+									<td>${n.writerId} </td>
 									<th>조회수</th>
-									<td>${hit}</td>
+									<td>${n.hit}</td>
 								</tr>
 								<tr>
 									<th>첨부파일</th>
-									<td colspan="3">파일명 : ${files}") </td>
+									<td colspan="3">파일명 : ${n.files}") </td>
 								</tr>
 								<tr class="content">
-									<td>${content } </td>
+									<td>${n.content } </td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 					
 					<div class="margin-top text-align-center">
-						<a class="btn btn-list" href="list.jsp">목록</a>
+						<a class="btn btn-list" href="/notice/list">목록</a>
 					</div>
 					
 					<div class="margin-top">
