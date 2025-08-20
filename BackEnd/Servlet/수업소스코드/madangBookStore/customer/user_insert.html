@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원등록</title>
+<style>
+	#container {
+		width: 600px;
+		margin: 10px auto;
+		padding: 10px;
+		border: 10px solid #ddd;
+	}
+</style>
+</head>
+<body>
+	<div id="container">
+		<form action="user/insert" method="post">
+			아이디: <input type="text" name="id" required="required"><br>
+			이름 : <input type="text" name="name"><br>
+			주소 : <input type="text" name="addr"><br>
+			전화 : <input type="text" name="tel"><br>	
+			<input type="submit" value="회원가입">	
+		</form>	
+	</div>
+
+</body>
+</html>
