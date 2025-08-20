@@ -9,14 +9,17 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@WebServlet("/user/insert")
 public class UserInsert extends HttpServlet{
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("utf-8");
 		
 		String id_ = req.getParameter("id");
 		String name = req.getParameter("name");
@@ -28,7 +31,7 @@ public class UserInsert extends HttpServlet{
 		String url = "jdbc:mysql://localhost:3306/madangdb";
 		String id = "root";
 		String pw = "pjc0129";
-		String sql = "insert into (id, name, addr, tel) values(?,?,?,?)";
+		String sql = "insert into customer (custid, name, address, phone) values(?,?,?,?)";
 		
 		// DB 커넥션 작업
 		try {
@@ -40,7 +43,7 @@ public class UserInsert extends HttpServlet{
 			pstmt.setString(3, addr);
 			pstmt.setString(4, tel);
 			
-			pstmt.executeUpdate(sql);
+			pstmt.executeUpdate();
 			// 해당 ID값으로 이동하여 꺼낼 데이터의 주소를 가르킨다.
 			
 			pstmt.close();
@@ -50,12 +53,9 @@ public class UserInsert extends HttpServlet{
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}		
 		
-		// View 처리 (모델을 화면처리 프로그램에게 전달)
-		req.getRequestDispatcher("/WEB-INF/notice/user_list.jsp").forward(req, resp);
+		resp.sendRedirect("/index.html");
 	}
-	}
-	
 
 }
