@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>도서등록</title>
+<style>
+	#container {
+		width: 600px;
+		margin: 10px auto;
+		padding: 10px;
+		border: 10px solid #ddd;
+	}
+</style>
+</head>
+<body>
+	<div id="container">
+		<form action="book/insert" method="post">
+			아이디: <input type="text" name="bookid" required="required"><br>
+			도서명 : <input type="text" name="bookname"><br>
+			출판사 : <input type="text" name="publisher"><br>
+			가격 : <input type="text" name="price"><br>	
+			<input type="submit" value="도서등록">	
+		</form>	
+	</div>
+
+</body>
+</html>
