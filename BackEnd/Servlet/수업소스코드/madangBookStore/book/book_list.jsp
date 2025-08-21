@@ -9,13 +9,10 @@
 <meta charset="UTF-8">
 <title>도서목록</title>
 <style>
-#container {
-	width: 600px;
-	margin: 10px auto;
-	padding: 10px;
-	border: 10px solid #ddd;
-}
+	
 </style>
+
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 	<div id="container">
@@ -32,12 +29,14 @@
 					<tr>
 						<td>${n.bookid }</td>
 						<td><a
-							href="/customer/detail?id=${n.bookid }">${n.bookname }</a></td>
+							href="/book/detail?id=${n.bookid }">${n.bookname }</a></td>
 						<td>${n.publisher }</td>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
+		<a class="btn" href="/">Home</a>
+		<a class="btn" href="/book_insert.html">도서등록</a>
 
 	</div>
 
