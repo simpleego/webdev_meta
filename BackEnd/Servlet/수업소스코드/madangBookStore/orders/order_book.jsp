@@ -6,13 +6,10 @@
 <meta charset="UTF-8">
 <title>도서 주문</title>
 <style>
-	#container {
-		width: 600px;
-		margin: 10px auto;
-		padding: 10px;
-		border: 10px solid #ddd;
-	}
+	
 </style>
+
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 	<div id="container">
