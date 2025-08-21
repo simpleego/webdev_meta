@@ -9,13 +9,10 @@
 <meta charset="UTF-8">
 <title>회원목록</title>
 <style>
-#container {
-	width: 600px;
-	margin: 10px auto;
-	padding: 10px;
-	border: 10px solid #ddd;
-}
+
 </style>
+
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 	<div id="container">
@@ -38,6 +35,8 @@
 				</c:forEach>
 			</tbody>
 		</table>
+		<a class="btn" href="/">Home</a>
+		<a class="btn" href="/user_insert.html">회원가입</a>
 
 	</div>
 
