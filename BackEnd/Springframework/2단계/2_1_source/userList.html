@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 목록</title>
+</head>
+<body>
+<h2>사용자 목록</h2>
+<a href="/users/add">사용자 추가</a>
+<table border="1">
+    <tr>
+        <th>이름</th>
+        <th>나이</th>
+        <th>이메일</th>
+        <th>삭제</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.name}">이름</td>
+        <td th:text="${user.age}">나이</td>
+        <td th:text="${user.email}">이메일</td>
+        <td>
+            <form th:action="@{/users/delete}" method="post">
+                <input type="hidden" name="email" th:value="${user.email}" />
+                <button type="submit">삭제</button>
+            </form>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
