@@ -17,17 +17,17 @@ public class BoardServiceClient {
         BoardService boardService = (BoardService) container.getBean("boardService");
 
         // 3 게시글 입력
-        String title = "test1 update";
-        String content = "test1 board service..update.......";
+        String title = "test6 insert";
+        String content = "test6 board service..insert.......";
         String writer = "simple";
-        int seq = 2;
+        int seq = 3;
 
         // 4. 게시글 생성(객체화)
         BoardVO  vo = new BoardVO(title,writer,content);
-        vo.setSeq(3);
+        vo.setSeq(seq);
 
         // 5. 게시글 등록 서비스 요청
-        // boardService.insertBoard(vo);
+        //boardService.insertBoard(vo);
 
         //  게시글 수정
         // boardService.updateBoard(vo);

@@ -9,17 +9,21 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 // BoardServiceImpl boardService = new BoardServiceImpl();
-@Service("boardService")
+@Service("boardService") // boardService = new BoardServiceImpl()
 public class BoardServiceImpl implements BoardService {
 
     @Autowired
-    BoardDAO boardDAO;
+    BoardService boardDAO;
+
     public BoardServiceImpl() {
         System.out.println("BoardServiceImpl() 생성자 호출됨");
     }
 
     @Override
     public void insertBoard(BoardVO vo) {
+//        if (vo.getSeq() == 0) {
+//            throw new IllegalArgumentException("0번 글은 등록할 수 없습니다.");
+//        }
         boardDAO.insertBoard(vo);
     }
 
