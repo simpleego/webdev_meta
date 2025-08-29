@@ -42,22 +42,29 @@ public class UserController {
 
     @GetMapping("/user/list")
     public String userList(Model model){
-//        List<User> users = new ArrayList<User>();
-//        User  user1 = new User(1, "홍길동", "1234", "simple@gmail.com");
-//        User  user2 = new User(2, "김길동", "1234", "simple@gmail.com");
-//        User  user3 = new User(3, "최길동", "1234", "simple@gmail.com");
-//        users.add(user1);
-//        users.add(user2);
-//        users.add(user3);
-
-//        List<User> users = List.of(
-//             new User(1, "홍길동", "1234", "simple@gmail.com"),
-//             new User(2, "김길동", "1234", "simple@gmail.com"),
-//             new User(3, "최길동", "1234", "simple@gmail.com")
-//        );
-
-        //model.addAttribute("users", users);
+        model.addAttribute("users",repo.findAll());
         return "userList";
+    }
+
+    @GetMapping("/user/edit/{id}")
+    public String userEditForm(@PathVariable String id, Model model){
+           User user = (User) repo.findById(id).orElseThrow(
+                   ()->new IllegalArgumentException("Invaild user id "));
+           model.addAttribute("user",user);
+        System.out.println("user : "+user);
+        return "editUser";
+    }
+
+    @PostMapping("/user/edit")
+    public String userEdit(@ModelAttribute User user){
+        repo.update(user);
+        return "redirect:/user/list";
+    }
+
+    @PostMapping("/user/delete")
+    public String deleteUser(@RequestParam String id) {
+        repo.deleteById(id);
+        return "redirect:/user/list";
     }
 
 }
