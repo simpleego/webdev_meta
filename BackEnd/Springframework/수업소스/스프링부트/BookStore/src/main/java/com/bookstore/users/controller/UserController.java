@@ -26,7 +26,6 @@ public class UserController {
     // User 등록
     @PostMapping("/user/add")
     public String addUser(@ModelAttribute User user) {
-
         userService.register(user);
         return "redirect:/user/list";
     }

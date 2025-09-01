@@ -12,16 +12,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private String id;
+    private String custId;
     private String name;
+    private String userName;
     private String password;
     private LocalDate birthday;
     private String email;
-
-    public User(String id, String name, LocalDate birthday, String email) {
-        this.id = id;
-        this.name = name;
-        this.birthday = birthday;
-        this.email = email;
-    }
+    private String address;
+    private String phone;
 }
+
+
+

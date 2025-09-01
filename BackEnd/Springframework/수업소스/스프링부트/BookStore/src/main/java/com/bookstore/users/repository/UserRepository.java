@@ -20,13 +20,16 @@ public class UserRepository {
 
     public void add(User user) {
         System.out.println("==> user added");
-        String sql = "INSERT INTO users (id, name, password, birthday, email) VALUES (?, ?, ?, ?,?)";
+        String sql = "INSERT INTO users (name, username, password, birthday, email, address, phone) " +
+                " VALUES (?,?,?,?,?,?,?)";
         int result = jdbc.update(sql,
-                user.getId(),
                 user.getName(),
+                user.getUserName(),
                 user.getPassword(),
                 java.sql.Date.valueOf(user.getBirthday()), // LocalDate → java.sql.Date
-                user.getEmail()
+                user.getEmail(),
+                user.getAddress(),
+                user.getPhone()
         );
         if (result == 1) {
             System.out.println(result);
@@ -36,10 +39,10 @@ public class UserRepository {
         }
     }
 
-    public Optional<Object> findById(String id) {
-        System.out.println("==> user findById"+id);
-        String sql = "SELECT * FROM users WHERE id = ?";
-        User user = jdbc.queryForObject(sql, userRowMapper(), id);
+    public Optional<Object> findById(String custId) {
+        System.out.println("==> user findById"+custId);
+        String sql = "SELECT * FROM users WHERE custid = ?";
+        User user = jdbc.queryForObject(sql, userRowMapper(), custId);
         return Optional.ofNullable(user);
     }
 
@@ -53,26 +56,31 @@ public class UserRepository {
             Date birthDate = rs.getDate("birthday");
             LocalDate birthDay = birthDate != null ? ((java.sql.Date) birthDate).toLocalDate() : null;
             return new User(
-                    rs.getString("id"),
+                    rs.getString("custid"),
                     rs.getString("name"),
+                    rs.getString("username"),
+                    rs.getString("password"),
                     birthDay,
-                    rs.getString("email")
+                    rs.getString("email"),
+                    rs.getString("phone"),
+                    rs.getString("address")
             );
         };
     }
 
     public void update(User user) {
-        String sql = "UPDATE users SET name = ?, email = ? WHERE id = ?";
+        String sql = "UPDATE users SET address = ?, email = ?, phone =?  WHERE custid = ?";
         jdbc.update(sql,
-                user.getName(),
+                user.getAddress(),
                 user.getEmail(),
-                user.getId()
+                user.getPhone(),
+                user.getCustId()
         );
 
     }
 
     public void deleteById(String id) {
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sql = "DELETE FROM users WHERE custid = ?";
         int rowAffected = jdbc.update(sql, id);
         if (rowAffected > 0) {
             System.out.println(rowAffected);

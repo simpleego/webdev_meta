@@ -6,11 +6,13 @@
 <body>
 <h1>회원 정보 수정</h1>
 <form th:action="@{/user/edit}" th:object="${user}" method="post">
-    <label>ID: <input type="text" th:field="*{id}" readonly /></label><br/>
-    <label>이름: <input type="text" th:field="*{name}" /></label><br/>
-    <label>생년월일:<input type="date" name="birthDay"
+    <label>ID: <input type="text" th:field="*{custId}" readonly /></label><br/>
+    <label>이름: <input type="text" th:field="*{name}" readonly /></label><br/>
+    <label>생년월일:<input type="date" name="birthDay" readonly
                        th:value="${@dateUtil.format(user.birthday, 'yyyy-MM-dd')}" />
     </label><br/>
+    <label>주소: <input type="text" th:field="*{address}" /></label><br/>
+    <label>휴대폰: <input type="tel" th:field="*{phone}" /></label><br/>
     <label>이메일: <input type="email" th:field="*{email}" /></label><br/>
     <button type="submit">수정</button>
 </form>

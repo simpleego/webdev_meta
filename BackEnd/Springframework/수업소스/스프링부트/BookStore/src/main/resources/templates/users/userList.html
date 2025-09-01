@@ -14,18 +14,18 @@
     <a href="/user/add">사용자 등록</a>
     <table border="1">
         <tr>
-            <th>아이디</th>
-            <th>이름</th>
+            <th>순번</th>
+            <th>회원아이디</th>
             <th>이메일</th>
             <th>삭제</th>
         </tr>
         <tr th:each="user : ${users}">
-            <td th:text="${user.id}"></td>
-            <td><a th:href="@{/user/edit/{id}(id=${user.id})}" th:text="${user.name}"></a>
+            <td th:text="${user.custId}"></td>
+            <td><a th:href="@{/user/edit/{id}(id=${user.custId})}" th:text="${user.userName}"></a>
             <td th:text="${user.email}"></td>
             <td>
                 <form th:action="@{/user/delete}" method="post">
-                    <input type="hidden" name="id" th:value="${user.id}">
+                    <input type="hidden" name="id" th:value="${user.custId}">
                     <button type="submit">삭제</button>
                 </form>
             </td>
