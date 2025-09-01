@@ -1,0 +1,374 @@
+# 도서 구매 기능
+-----
+
+### 📁 1단계: 주문 관련 기능 추가
+
+주문(Order)을 처리하기 위한 `Domain`, `Repository`, `Service`, `Controller`를 추가합니다.
+
+#### **1. 데이터베이스 테이블 생성**
+
+먼저, 제공해주신 ERD를 바탕으로 `Orders` 테이블을 생성하는 SQL을 작성합니다.
+
+```sql
+-- Book, Customer 테이블이 이미 존재한다고 가정합니다.
+CREATE TABLE Orders (
+    orderid BIGINT AUTO_INCREMENT PRIMARY KEY,
+    custid BIGINT NOT NULL,
+    bookid BIGINT NOT NULL,
+    saleprice INT,
+    orderdate DATE,
+    FOREIGN KEY (custid) REFERENCES Customer(custid),
+    FOREIGN KEY (bookid) REFERENCES Book(bookid)
+);
+```
+
+#### **2. Domain: `Order.java`**
+
+DB의 `Orders` 테이블과 매핑될 객체입니다.
+
+```java
+package com.example.project.domain;
+
+import lombok.Data;
+import java.time.LocalDate;
+
+@Data
+public class Order {
+    private Long orderid;
+    private Long custid;
+    private Long bookid;
+    private Integer saleprice;
+    private LocalDate orderdate;
+}
+```
+
+#### **3. Repository: `OrderRepository.java`**
+
+주문 정보를 DB에 저장하고, 특정 회원의 주문 목록을 조회하는 Repository입니다.
+
+```java
+package com.example.project.repository;
+
+import com.example.project.domain.Order;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
+import java.util.List;
+
+@Repository
+public class OrderRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public OrderRepository(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    private RowMapper<Order> orderRowMapper() {
+        return (rs, rowNum) -> {
+            Order order = new Order();
+            order.setOrderid(rs.getLong("orderid"));
+            order.setCustid(rs.getLong("custid"));
+            order.setBookid(rs.getLong("bookid"));
+            order.setSaleprice(rs.getInt("saleprice"));
+            order.setOrderdate(rs.getDate("orderdate").toLocalDate());
+            return order;
+        };
+    }
+
+    // 주문 정보 저장
+    public Order save(Order order) {
+        String sql = "INSERT INTO Orders(custid, bookid, saleprice, orderdate) VALUES(?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
+                order.getCustid(),
+                order.getBookid(),
+                order.getSaleprice(),
+                order.getOrderdate());
+        return order;
+    }
+
+    // 특정 회원의 모든 주문 내역 조회
+    public List<Order> findByCustId(Long custid) {
+        String sql = "SELECT * FROM Orders WHERE custid = ?";
+        return jdbcTemplate.query(sql, orderRowMapper(), custid);
+    }
+}
+```
+
+#### **4. Service: `OrderService.java`**
+
+주문 생성과 관련된 비즈니스 로직을 처리합니다.
+
+```java
+package com.example.project.service;
+
+import com.example.project.domain.Book;
+import com.example.project.domain.Customer;
+import com.example.project.domain.Order;
+import com.example.project.repository.OrderRepository;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Service
+public class OrderService {
+
+    private final OrderRepository orderRepository;
+
+    public OrderService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
+    /**
+     * 주문 생성
+     */
+    public void createOrder(Customer customer, Book book) {
+        Order order = new Order();
+        order.setCustid(customer.getCustid());
+        order.setBookid(book.getBookid());
+        order.setSaleprice(book.getPrice()); // 실제 판매가는 정책에 따라 다를 수 있음
+        order.setOrderdate(LocalDate.now()); // 주문일은 현재 날짜
+
+        orderRepository.save(order);
+    }
+
+    /**
+     * 특정 회원의 주문 목록 조회
+     */
+    public List<Order> findOrdersByCustomer(Long custid) {
+        return orderRepository.findByCustId(custid);
+    }
+}
+```
+
+#### **5. Controller: `OrderController.java`**
+
+주문 생성 및 주문 내역 조회 요청을 처리하는 컨트롤러입니다.
+
+```java
+package com.example.project.controller;
+
+import com.example.project.domain.Book;
+import com.example.project.domain.Customer;
+import com.example.project.domain.Order;
+import com.example.project.repository.BookRepository;
+import com.example.project.service.OrderService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+import java.util.Optional;
+
+@Controller
+public class OrderController {
+
+    private final OrderService orderService;
+    private final BookRepository bookRepository; // Book 정보 조회를 위해 주입
+
+    public OrderController(OrderService orderService, BookRepository bookRepository) {
+        this.orderService = orderService;
+        this.bookRepository = bookRepository;
+    }
+
+    @PostMapping("/orders/new")
+    public String createOrder(@RequestParam("bookId") Long bookId, HttpSession session, RedirectAttributes redirectAttributes) {
+        Customer loginMember = (Customer) session.getAttribute("loginMember");
+        if (loginMember == null) {
+            return "redirect:/members/login"; // 로그인 안되어 있으면 로그인 페이지로
+        }
+
+        Optional<Book> bookOptional = bookRepository.findById(bookId);
+        if (bookOptional.isPresent()) {
+            orderService.createOrder(loginMember, bookOptional.get());
+            redirectAttributes.addFlashAttribute("successMessage", "도서 구매가 완료되었습니다.");
+            return "redirect:/orders/history"; // 구매 완료 후 주문 내역 페이지로
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "존재하지 않는 도서입니다.");
+            return "redirect:/";
+        }
+    }
+
+    @GetMapping("/orders/history")
+    public String orderHistory(HttpSession session, Model model) {
+        Customer loginMember = (Customer) session.getAttribute("loginMember");
+        if (loginMember == null) {
+            return "redirect:/members/login";
+        }
+
+        List<Order> orders = orderService.findOrdersByCustomer(loginMember.getCustid());
+        model.addAttribute("orders", orders);
+
+        return "orders/orderHistory";
+    }
+}
+```
+
+-----
+
+### 📁 2단계: 기존 코드 수정 및 뷰(View) 추가
+
+#### **1. Repository: `BookRepository.java` 수정**
+
+ID로 특정 도서 하나를 찾는 `findById` 메서드를 추가합니다.
+
+```java
+// BookRepository.java 파일에 아래 메서드를 추가합니다.
+import org.springframework.dao.EmptyResultDataAccessException; // import 추가
+import java.util.Optional; // import 추가
+
+//... 기존 코드 생략
+
+public Optional<Book> findById(Long bookId) {
+    String sql = "SELECT * FROM Book WHERE bookid = ?";
+    try {
+        Book book = jdbcTemplate.queryForObject(sql, bookRowMapper(), bookId);
+        return Optional.of(book);
+    } catch (EmptyResultDataAccessException e) {
+        return Optional.empty();
+    }
+}
+```
+
+#### **2. Controller: `BookController.java` 수정**
+
+도서 상세 페이지를 보여주는 `bookDetail` 메서드를 추가합니다.
+
+```java
+// BookController.java 파일에 아래 메서드를 추가합니다.
+import java.util.Optional; // import 추가
+import org.springframework.web.bind.annotation.PathVariable; // import 추가
+
+//... 기존 코드 생략
+
+@GetMapping("/books/{bookId}")
+public String bookDetail(@PathVariable Long bookId, Model model) {
+    Optional<Book> bookOptional = bookRepository.findById(bookId); // BookRepository 직접 사용
+    if (bookOptional.isPresent()) {
+        model.addAttribute("book", bookOptional.get());
+        return "books/bookDetail";
+    } else {
+        return "redirect:/"; // 책이 없으면 홈으로
+    }
+}
+```
+
+> **참고**: `BookController`에서 `BookService`를 거치지 않고 `BookRepository`를 직접 사용했습니다. 간단한 조회 로직은 컨트롤러가 리포지토리를 직접 참조해도 괜찮습니다.
+
+#### **3. View: `home.html` 수정**
+
+로그인 시 도서 목록의 **책 제목에 상세 페이지로 가는 링크**를 추가하고, **주문 내역 링크**를 추가합니다.
+
+```html
+<div th:if="${session.loginMember != null}">
+        <p><b th:text="${session.loginMember.name}"></b>님, 환영합니다!</p>
+        <div>
+            <a href="/members/edit">회원정보 수정</a>
+            <a href="/orders/history">주문 내역</a> <form th:action="@{/members/logout}" method="post" style="display:inline;">
+                <button type="submit">로그아웃</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <h3>🛒 구매 가능 도서 목록</h3>
+        <table border="1">
+            <tbody>
+                <tr th:each="book : ${books}">
+                    <td>
+                        <a th:href="@{/books/{id}(id=${book.bookid})}" th:text="${book.bookname}"></a>
+                    </td>
+                    <td th:text="${book.publisher}"></td>
+                    <td th:text="${book.price}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+```
+
+#### **4. View: `bookDetail.html` 추가**
+
+`resources/templates/books/` 경로에 도서 상세 정보와 구매 버튼이 있는 뷰 파일을 생성합니다.
+
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>도서 상세 정보</title>
+</head>
+<body>
+<div class="container">
+    <h2 th:text="${book.bookname}">책 제목</h2>
+    <hr>
+    <div><strong>출판사:</strong> <span th:text="${book.publisher}"></span></div>
+    <div><strong>가격:</strong> <span th:text="${book.price}"></span> 원</div>
+    <hr>
+
+    <form th:action="@{/orders/new}" method="post">
+        <input type="hidden" name="bookId" th:value="${book.bookid}" />
+        <button type="submit">구매하기</button>
+    </form>
+
+    <button type="button" onclick="location.href='/'">목록으로</button>
+</div>
+</body>
+</html>
+```
+
+#### **5. View: `orderHistory.html` 추가**
+
+`resources/templates/orders/` 경로에 주문 내역을 보여주는 뷰 파일을 생성합니다.
+
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>주문 내역</title>
+</head>
+<body>
+<div class="container">
+    <h2>주문 내역</h2>
+    <div th:if="${successMessage}" th:text="${successMessage}" style="color:blue;"></div>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>주문번호</th>
+            <th>주문일자</th>
+            <th>도서번호</th>
+            <th>판매가격</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.orderid}"></td>
+            <td th:text="${order.orderdate}"></td>
+            <td th:text="${order.bookid}"></td>
+            <td th:text="${order.saleprice}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <button type="button" onclick="location.href='/'">홈으로</button>
+</div>
+</body>
+</html>
+
+```
+
+-----
+
+### ✅ 3단계: 실행 및 확인
+
+1.  프로젝트를 실행하고 로그인합니다.
+2.  메인 화면의 도서 목록에서 원하는 **책 제목을 클릭**합니다.
+3.  해당 도서의 상세 정보가 담긴 페이지로 이동하는지 확인합니다.
+4.  **'구매하기' 버튼**을 클릭합니다.
+5.  "도서 구매가 완료되었습니다." 메시지와 함께 **주문 내역 페이지**로 이동하며, 방금 구매한 내역이 목록에 추가되었는지 확인합니다.
+6.  메인 화면의 **'주문 내역' 링크**를 클릭했을 때도 주문 내역 페이지로 잘 이동하는지 확인합니다.
