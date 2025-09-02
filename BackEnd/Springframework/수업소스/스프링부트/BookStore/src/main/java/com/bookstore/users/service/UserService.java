@@ -21,11 +21,35 @@ public class UserService {
         userRepo.add(user);
     }
 
+    /**
+     * 회원 가입
+     */
+    public String join(User customer) {
+        // 아이디 중복 확인
+        validateDuplicateMember(customer);
+        userRepo.save(customer);
+        return customer.getCustId();
+    }
+
+    private void validateDuplicateMember(User customer) {
+        userRepo.findByUsername(customer.getUserName())
+                .ifPresent(m -> {
+                    throw new IllegalStateException("이미 존재하는 아이디입니다.");
+                });
+    }
+
     public List<User> findAll() {
         return userRepo.findAll();
     }
 
-    public Optional<Object> findById(String id) {
+    // 로그인
+    public Optional<User> login(String username, String password) {
+        return userRepo.findByUsername(username)
+                .filter(user -> user.getPassword().equals(password));
+    }
+
+
+    public Optional<User> findById(String id) {
         return userRepo.findById(id);
     }
 

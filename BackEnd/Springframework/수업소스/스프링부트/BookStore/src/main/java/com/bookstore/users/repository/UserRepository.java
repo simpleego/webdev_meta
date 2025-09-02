@@ -1,6 +1,7 @@
 package com.bookstore.users.repository;
 
 import com.bookstore.users.entity.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -34,21 +35,33 @@ public class UserRepository {
         if (result == 1) {
             System.out.println(result);
             System.out.println("회원 등록 성공");
-        }else {
+        } else {
             System.out.println("회원등록 실패");
         }
     }
 
-    public Optional<Object> findById(String custId) {
-        System.out.println("==> user findById"+custId);
+    public Optional<User> findByUsername(String userName) {
+        System.out.println("==> user findById" + userName);
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try {
+            User user = jdbc.queryForObject(sql, userRowMapper(), userName);
+            return Optional.ofNullable(user);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
+    }
+
+    public Optional<User> findById(String custId) {
+        System.out.println("==> user findById" + custId);
         String sql = "SELECT * FROM users WHERE custid = ?";
         User user = jdbc.queryForObject(sql, userRowMapper(), custId);
         return Optional.ofNullable(user);
     }
 
-    public List<User> findAll(){
+    public List<User> findAll() {
         String sql = "SELECT * FROM users";
-        return jdbc.query(sql,userRowMapper());
+        return jdbc.query(sql, userRowMapper());
     }
 
     private RowMapper<User> userRowMapper() {
@@ -79,13 +92,23 @@ public class UserRepository {
 
     }
 
+    // 회원정보 삭제
     public void deleteById(String id) {
         String sql = "DELETE FROM users WHERE custid = ?";
         int rowAffected = jdbc.update(sql, id);
         if (rowAffected > 0) {
             System.out.println(rowAffected);
-        }else {
-            System.out.println("삭제할 사용자가 없습니다."+id);
+        } else {
+            System.out.println("삭제할 사용자가 없습니다." + id);
         }
     }
+
+    // 회원 정보 저장
+    public User save(User user) {
+        String sql = "INSERT INTO Customer(name, username, password, address, phone) VALUES(?, ?, ?, ?, ?)";
+        jdbc.update(sql, user.getName(), user.getUserName(),
+                user.getPassword(), user.getAddress(), user.getPhone());
+        return user;
+    }
 }
+
