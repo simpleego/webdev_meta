@@ -17,25 +17,24 @@ public class UserService {
         this.userRepo = userRepo;
     }
 
-    public void register(User user) {
-        userRepo.add(user);
+
+    public int join(User user) {
+        System.out.println("==> user joined");
+        validateDuplicateUser(user);
+        userRepo.save(user);
+        return user.getCustId();
     }
 
-    /**
-     * 회원 가입
-     */
-    public String join(User customer) {
-        // 아이디 중복 확인
-        validateDuplicateMember(customer);
-        userRepo.save(customer);
-        return customer.getCustId();
-    }
-
-    private void validateDuplicateMember(User customer) {
-        userRepo.findByUsername(customer.getUserName())
-                .ifPresent(m -> {
+    private void validateDuplicateUser(User user) {
+        userRepo.findByUsername(user.getUserName())
+                .ifPresent(m ->{
                     throw new IllegalStateException("이미 존재하는 아이디입니다.");
                 });
+
+    }
+
+    public void register(User user) {
+        userRepo.add(user);
     }
 
     public List<User> findAll() {

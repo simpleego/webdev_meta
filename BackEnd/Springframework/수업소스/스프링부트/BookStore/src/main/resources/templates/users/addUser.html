@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>회원 등록</title>
+    <title>회원 가입</title>
 </head>
 <body>
-<h2>회원 등록</h2>
+<h2>회원 가입</h2>
 <form th:action="@{/user/add}" th:object="${user}" method="post">
     <p>아이디: <input type="text" th:field="*{userName}" /></p>
     <p>비번: <input type="password" th:field="*{password}" /></p>
@@ -16,5 +16,6 @@
     <p>주소: <input type="text" th:field="*{address}" /></p>
     <button type="submit">추가</button>
 </form>
+<div th:if="${errorMessage}" th:text="${errorMessage}" style="color:red"></div>
 </body>
 </html>
