@@ -35,6 +35,7 @@ public class UserController {
         //userService.register(user);
         try {
             userService.join(user);
+            return "redirect:/user/login";
         }catch (IllegalStateException e){
             message.addFlashAttribute("errorMessage",e.getMessage());
         }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Book Store</title>
 </head>
 <body>
     <h1>도서관리 시스템</h1>
@@ -17,6 +17,31 @@
         </form>
     </div>
 
-    <a href="/user/list">회원목록</a>
+    <div id="bookContent">
+        <h2> 구매 가능 도서 목록 </h2>
+        <table>
+            <thead>
+                <tr>
+                    <th> 순 번 </th>
+                    <th> 책 제목 </th>
+                    <th> 출 판 사 </th>
+                    <th> 가 격 </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="book, stat : ${books}">
+                    <td th:text="${stat.index+1}"></td>
+                    <td>
+                        <a th:href="@{/book/detail/{id}(id=${book.bookid})}" th:text="${book.bookname}"></a>
+                    </td>
+                    <td th:text="${book.publisher}"></td>
+                    <td th:text="${book.price}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
 </body>
 </html>

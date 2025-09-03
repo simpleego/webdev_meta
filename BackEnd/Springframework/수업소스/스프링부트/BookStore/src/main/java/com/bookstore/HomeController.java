@@ -8,6 +8,6 @@ public class HomeController {
     // /요청을 처리한다.
     @GetMapping("/")
     public String home() {
-        return "home";
+        return "redirect:/book/list";
     }
 }
