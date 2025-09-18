@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/signInUp.css">
+</head>
+<body>
+<div id="container">
+    <div th:replace="common/header :: header"></div>
+    <main id="sub_container">
+        <div id="login" class="container">
+            <form action="/user/login" method="post">
+                <h1>로그인</h1>
+                <span>회원 아이디 비번을 입력</span>
+                <input type="text" name="username" required="required" placeholder="User ID">
+                <input type="password" name="password" required="required" placeholder="Password">
+                <button class="form_btn">로그인</button>
+            </form>
+        </div>
+        <!--        <form action="/user/login" method="post">-->
+        <!--            <label>회원아이디 : </label>-->
+        <!--            <input type="text" name="username" required="required"/><br>-->
+        <!--            <label>비밀번호 : </label>-->
+        <!--            <input type="password" name="password" required="required"/><br>-->
+        <!--            <button type="submit">로그인</button>-->
+        <!--        </form>-->
+    </main>
+    <div th:replace="common/footer :: footer"></div>
+</div>
+</body>
+</html>

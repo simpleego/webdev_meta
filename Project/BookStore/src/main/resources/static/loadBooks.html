@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book List</title>
+</head>
+<body>
+<h1>📚 도서 목록</h1>
+<ul id="bookList"></ul>
+<script>
+    fetch('http://localhost:9090/api/books')
+        .then(response => response.json())
+        .then(books => {
+            const list = document.getElementById('bookList');
+            books.forEach(book => {
+                const item = document.createElement('li');
+                item.textContent = `${book.bookname} - ${book.writer} - ${book.price} `;
+                list.appendChild(item);
+            });
+        })
+        .catch(error => console.error('도서 목록 불러오기 실패:', error));
+</script>
+</body>
+</html>
