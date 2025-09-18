@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>결과</title>
+    <style>
+        #container { width: 70%; margin: 50px auto; border-top: 10px solid #aaa; border-bottom: 20px solid #333; padding: 2em; }
+        .correct { color: blue; font-weight: bold; }
+        .wrong { color: red; font-weight: bold; }
+        .na { color: orange; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div id="container">
+    <h2>🧮 점수: <span th:text="${score*(100/total)}점"></span>/<span th:text="${score} / ${total}"></span></h2>
+    <a th:href="@{/}">← 돌아가기</a>
+    <hr/>
+    <div th:each="q : ${questions}">
+        <div>
+            <strong th:text="${q.id} + '. ' + ${q.text}"></strong>
+            <div th:each="c : ${q.choices}">
+                <span th:text="${c.label + '. ' + c.text}"></span>
+                <span th:if="${answers['answer_' + q.id] == c.label and c.label == q.correctLabel}" class="correct"> — 정답 (선택)</span>
+                <span th:if="${answers['answer_' + q.id] == c.label and c.label != q.correctLabel}" class="wrong"> — 오답 (선택)</span>
+                <span th:if="${answers['answer_' + q.id]} == null and c.label == q.correctLabel" class="na"> — 정답</span>
+                <br/>
+            </div>
+            <div><em>정답: <span th:text="${q.correctLabel}"></span></em></div>
+        </div>
+        <hr/>
+    </div>
+</div>
+</body>
+</html>

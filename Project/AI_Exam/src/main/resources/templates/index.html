@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>GPT 시험문제 제출 및 풀이</title>
+    <style>
+        #container { width: 70%; margin: 50px auto; border-top: 10px solid #aaa; border-bottom: 20px solid #333; padding: 2em; }
+        .question { margin: 1em 0; }
+        .choices label { display: block; margin: 4px 0; }
+    </style>
+</head>
+<body>
+<div id="container">
+    <h2>🧠 자바 기초 문제</h2>
+
+    <form th:action="@{/generate}" method="post" style="margin-bottom: 1em;">
+        <label>생성할 문항 수: <input type="number" name="count" value="5" min="1" max="20"/></label>
+        <button type="submit">문제 생성하기</button>
+    </form>
+
+    <form th:if="${#lists.size(questions) > 0}" th:action="@{/submit}" method="post">
+        <div th:each="q : ${questions}" class="question">
+            <strong th:text="${q.id} + '. ' + ${q.text}"></strong>
+            <div class="choices">
+                <label th:each="c : ${q.choices}">
+                    <input type="radio" th:name="${'answer_' + q.id}" th:value="${c.label}"/>
+                    <span th:text="${c.label + '. ' + c.text}"></span>
+                </label>
+            </div>
+        </div>
+        <button type="submit">제출하기</button>
+    </form>
+
+    <div th:if="${#lists.size(questions) == 0}">
+        아직 저장된 문제가 없습니다. “문제 생성하기”를 눌러 생성하세요.
+    </div>
+</div>
+</body>
+</html>
