@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT 시험문제 제출 및 풀이</title>
+    <style>
+        #container {
+            width: 70%;
+            margin: 50px auto;
+            border-top: 10px solid #aaa;
+            border-bottom: 20px solid #333;
+            padding: 2em;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h2>🧠 자바 기초 문제 생성</h2>
+        <button onclick="askQuestion()">문제 생성하기</button>
+        <div id="timer" style="margin-top:10px; font-weight:bold;"></div>
+        <div id="response"></div>
+        <button id="submitBtn" onclick="submitAnswers()" style="display:none; margin-top:20px;">제출하기</button>
+
+        <script>
+            let correctAnswers = []; // 정답 저장
+            let timerInterval;
+            const API_KEY = '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'
+            async function askQuestion() {
+                const responseDiv = document.getElementById('response');
+                responseDiv.innerHTML = '⏳ 문제를 생성 중입니다...';
+                document.getElementById('submitBtn').style.display = 'none';
+                clearInterval(timerInterval);
+                document.getElementById('timer').textContent = '';
+
+                const prompt = `자바 기초에 관한 4지선다형 문제를 5개 만들어줘. 각 문제는 다음 형식으로 출력해줘:
+                        문제: [질문 내용]
+                        A. [보기1]
+                        B. [보기2]
+                        C. [보기3]
+                        D. [보기4]
+                        정답: [정답 보기의 번호와 내용]`;
+
+                try {
+                    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            model: 'gpt-3.5-turbo',
+                            messages: [
+                                { role: 'system', content: 'You are a helpful assistant.' },
+                                { role: 'user', content: prompt }
+                            ]
+                        })
+                    });
+
+                    if (!res.ok) {
+                        const errorText = await res.text();
+                        responseDiv.innerHTML = `❌ 요청 실패: ${res.status} ${res.statusText}<br>${errorText}`;
+                        return;
+                    }
+
+                    const data = await res.json();
+
+                    if (!data.choices || !data.choices[0]?.message?.content) {
+                        responseDiv.innerHTML = '❌ 응답 형식이 올바르지 않습니다. 다시 시도해 주세요.';
+                        return;
+                    }
+
+                    const answer = data.choices[0].message.content;
+                    responseDiv.innerHTML = formatQuestions(answer);
+                    document.getElementById('submitBtn').style.display = 'inline-block';
+                    startTimer(60); // 60초 타이머 시작
+                } catch (error) {
+                    responseDiv.innerHTML = `❌ 네트워크 오류 또는 서버 문제 발생: ${error.message}`;
+                }
+            }
+
+            function formatQuestions(text) {
+                const blocks = text.split(/문제:/).slice(1);
+                correctAnswers = []; // 초기화
+
+                return blocks.map((block, index) => {
+                    const lines = block.trim().split('\n');
+                    const questionText = lines[0];
+                    const choicesArray = lines.slice(1, 5);
+                    const answerMatch = lines[5].match(/정답:\s([A-D])\./);
+                    const correct = answerMatch ? answerMatch[1] : null;
+                    correctAnswers.push(correct);
+
+                    const choicesHTML = choicesArray.map(choice => {
+                        const label = choice.trim();
+                        const letter = label.charAt(0);
+                        return `
+            <label>
+              <input type="radio" name="answer${index}" value="${letter}">
+              ${label}
+            </label><br>
+          `;
+                    }).join('');
+
+                    return `
+          <div class="question" data-index="${index}">
+            <strong>${index + 1}. ${questionText}</strong><br>
+            <div class="choices">${choicesHTML}</div>
+            <div class="result" style="margin-top:5px; font-weight:bold;"></div>
+          </div>
+          <hr>
+        `;
+                }).join('');
+            }
+
+            function submitAnswers() {
+                let score = 0;
+                const questions = document.querySelectorAll('.question');
+
+                questions.forEach((question, index) => {
+                    const selected = question.querySelector(`input[name="answer${index}"]:checked`);
+                    const resultDiv = question.querySelector('.result');
+                    const correct = correctAnswers[index];
+
+                    if (selected) {
+                        const userChoice = selected.value;
+                        if (userChoice === correct) {
+                            score++;
+                            resultDiv.textContent = '🎉 정답입니다!';
+                            resultDiv.style.color = 'blue';
+                        } else {
+                            resultDiv.textContent = `❌ 오답입니다. 정답은 ${correct}입니다.`;
+                            resultDiv.style.color = 'red';
+                        }
+                    } else {
+                        resultDiv.textContent = '⚠️ 선택하지 않았습니다.';
+                        resultDiv.style.color = 'orange';
+                    }
+                });
+
+                document.getElementById('submitBtn').style.display = 'none';
+                clearInterval(timerInterval);
+                document.getElementById('timer').textContent = `🧮 총 점수:${score * 20}  ${score}/${questions.length}`;
+            }
+
+            function startTimer(seconds) {
+                let timeLeft = seconds;
+                const timerDisplay = document.getElementById('timer');
+                timerDisplay.textContent = `⏱️ 남은 시간: ${timeLeft}초`;
+
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerDisplay.textContent = `⏱️ 남은 시간: ${timeLeft}초`;
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerDisplay.textContent = '⏰ 시간이 종료되었습니다. 자동 제출합니다.';
+                        submitAnswers();
+                    }
+                }, 1000);
+            }
+        </script>
+    </div>
+</body>
