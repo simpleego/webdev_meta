@@ -23,7 +23,7 @@ spring:
 logging.level.org.hibernate.SQL: debug
 
 openai:
-  api-key: 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 # 환경 변수에서 API 키를 불러옵니다
+  api-key: '본인의 api 키값을 여기에 설정'
 
 server:
   port: 9090
