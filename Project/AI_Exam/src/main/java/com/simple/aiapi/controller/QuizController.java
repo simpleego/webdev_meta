@@ -44,8 +44,12 @@ public class QuizController {
                 } catch (NumberFormatException ignored) {}
             }
         });
+
         int total = quizService.findAll().size();
         int correct = quizService.grade(answers);
+
+        // 문제수를 기준으로 100점 만점으로 환산점수 구하기
+        correct = correct * (100/total);
         model.addAttribute("score", correct);
         model.addAttribute("total", total);
         model.addAttribute("questions", quizService.findAll());
