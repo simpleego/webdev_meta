@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #38a169;
+        }
+
+        .btn-verify {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-verify:hover {
+            background: #dd6b20;
+        }
+
+        button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .success {
+            background-color: #c6f6d5;
+            color: #22543d;
+            border-left: 4px solid #38a169;
+        }
+
+        .error {
+            background-color: #fed7d7;
+            color: #742a2a;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .verified-badge {
+            display: inline-block;
+            background: #38a169;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>🔐 회원가입</h2>
+
+    <div id="message" class="message"></div>
+
+    <form id="signupForm">
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text" id="name" placeholder="홍길동" value="회원가입이 완료되었습니다." required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">
+                이메일
+                <span id="verifiedBadge" style="display:none;" class="verified-badge">✓ 인증완료</span>
+            </label>
+            <div class="button-group">
+                <input type="email" id="email" placeholder="example@email.com" required style="flex: 2;">
+                <button type="button" class="btn-secondary" onclick="sendCode()" style="flex: 1;">코드전송</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="code">인증코드</label>
+            <div class="button-group">
+                <input type="text" id="code" placeholder="6자리 숫자" maxlength="6" required style="flex: 2;">
+                <button type="button" class="btn-verify" onclick="verifyCode()" style="flex: 1;">인증하기</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" placeholder="8자 이상" required minlength="8">
+        </div>
+
+        <button type="submit" class="btn-primary" id="signupBtn" disabled>회원가입</button>
+    </form>
+</div>
+
+<script>
+    let isVerified = false;
+
+    function showMessage(msg, isSuccess) {
+        const messageDiv = document.getElementById('message');
+        messageDiv.textContent = msg;
+        messageDiv.className = 'message show ' + (isSuccess ? 'success' : 'error');
+        setTimeout(() => {
+            messageDiv.classList.remove('show');
+        }, 3000);
+    }
+
+    function sendCode() {
+        const email = document.getElementById('email').value;
+        if (!email) {
+            showMessage('이메일을 입력하세요', false);
+            return;
+        }
+
+        // 이메일 형식 검증
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showMessage('올바른 이메일 형식이 아닙니다', false);
+            return;
+        }
+
+        showMessage('인증코드 발송 중...', true);
+
+        fetch('/send-code', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'email=' + encodeURIComponent(email)
+        })
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'success') {
+                    showMessage('✉️ 인증코드가 이메일로 발송되었습니다!', true);
+                } else {
+                    showMessage('발송 실패. 다시 시도해주세요', false);
+                }
+            })
+            .catch(() => showMessage('오류가 발생했습니다', false));
+    }
+
+    function verifyCode() {
+        const email = document.getElementById('email').value;
+        const code = document.getElementById('code').value;
+
+        if (!email || !code) {
+            showMessage('이메일과 인증코드를 입력하세요', false);
+            return;
+        }
+
+        if (code.length !== 6) {
+            showMessage('인증코드는 6자리 숫자입니다', false);
+            return;
+        }
+
+        fetch('/verify-code', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'email=' + encodeURIComponent(email) + '&code=' + encodeURIComponent(code)
+        })
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'success') {
+                    isVerified = true;
+                    document.getElementById('signupBtn').disabled = false;
+                    document.getElementById('verifiedBadge').style.display = 'inline-block';
+                    document.getElementById('email').readOnly = true;
+                    document.getElementById('code').readOnly = true;
+                    showMessage('✅ 인증이 완료되었습니다!', true);
+                } else {
+                    showMessage('❌ 인증코드가 일치하지 않습니다', false);
+                }
+            })
+            .catch(() => showMessage('오류가 발생했습니다', false));
+    }
+
+    document.getElementById('signupForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (!isVerified) {
+            showMessage('이메일 인증을 완료해주세요', false);
+            return;
+        }
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const name = document.getElementById('name').value;
+
+        if (password.length < 8) {
+            showMessage('비밀번호는 8자 이상이어야 합니다', false);
+            return;
+        }
+
+        fetch('/signup', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&name=${encodeURIComponent(name)}`
+        })
+            .then(response => response.text())
+            .then(data => {
+                showMessage('🎉 ' + data, true);
+                setTimeout(() => {
+                    // 회원가입 후 이동할 페이지 (예: 로그인 페이지)
+                    alert('회원가입이 완료되었습니다!');
+                    window.location.href = '/';
+                }, 2000);
+            })
+            .catch(() => showMessage('회원가입 실패', false));
+    });
+
+    // 엔터키로 다음 단계 진행
+    document.getElementById('email').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendCode();
+        }
+    });
+
+    document.getElementById('code').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            verifyCode();
+        }
+    });
+</script>
+</body>
+</html>
